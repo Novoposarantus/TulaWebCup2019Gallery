@@ -1,10 +1,7 @@
 ﻿using Domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Models;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Domain.Repositories
@@ -28,9 +25,13 @@ namespace Domain.Repositories
             return await Users.FirstOrDefaultAsync(user => user.UserName == userName);
         }
 
-        public Task SaveNewUser(User user)
+        public async Task SaveNewUser(User user)
         {
-            throw new NotImplementedException();
+            using (var context = ContextFactory.CreateDbContext(ConnectionString))
+            {
+                context.Users.Add(user);
+                await context.SaveChangesAsync();
+            }
         }
     }
 }
