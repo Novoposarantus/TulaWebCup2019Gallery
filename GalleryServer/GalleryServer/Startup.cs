@@ -8,30 +8,25 @@ using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 
 namespace GalleryServer
 {
 	public class Startup
 	{
-		public class Startup
+		public void ConfigureServices(IServiceCollection services)
 		{
-			public void ConfigureServices(IServiceCollection services)
+			services.AddMvc();
+		}
+
+		public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+		{
+			if( env.IsDevelopment() )
 			{
-				services.AddMvc();
+				app.UseDeveloperExceptionPage();
 			}
 
-			public void Configure(IApplicationBuilder app, IHostingEnvironment env)
-			{
-				if( env.IsDevelopment() )
-				{
-					app.UseDeveloperExceptionPage();
-				}
-
-				app.UseStaticFiles();
-				app.UseMvc();
-			}
+			app.UseStaticFiles();
+			app.UseMvc();
 		}
 	}
 }

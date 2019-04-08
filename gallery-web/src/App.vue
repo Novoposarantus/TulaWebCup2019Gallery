@@ -12,6 +12,11 @@
                       class="list-group-item">
             <a>Авторизация</a>
           </router-link>
+          <router-link :to='"/gallery"'
+                      tag="li"
+                      class="list-group-item">
+            <a>Галерея</a>
+          </router-link>
         </ul>
       </nav>
     </header>
