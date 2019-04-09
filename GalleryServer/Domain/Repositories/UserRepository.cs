@@ -15,7 +15,7 @@ namespace Domain.Repositories
             {
                 using (var context = ContextFactory.CreateDbContext(ConnectionString))
                 {
-                    return context.Users.AsQueryable();
+                    return context.Users.Include(user=>user.Role).AsQueryable();
                 }
             }
         }
