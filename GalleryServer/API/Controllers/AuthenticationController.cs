@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
-using API.DtoModels;
+using Models.DtoModels;
 using Domain.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Domain.Helpers;
@@ -21,7 +21,7 @@ namespace API.Controllers
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] AuthenticationModel model)
         {
-            var user = await _userRepository.GetUser(model.UserName);
+            var user = await _userRepository.GetUser(model.UserName, model.Password);
             if (user == null)
             {
                 return Unauthorized("Неверный логин или пароль");

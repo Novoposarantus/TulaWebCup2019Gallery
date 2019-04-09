@@ -1,4 +1,4 @@
-﻿using Models;
+﻿using Models.Models;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -8,6 +8,7 @@ namespace Domain.Interfaces
     {
         IQueryable<User> Users { get; }
         Task<User> GetUser(string userName);
+        Task<User> GetUser(string userName, string password);
         Task SaveNewUser(User user);
     }
 }

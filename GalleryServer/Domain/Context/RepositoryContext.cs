@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Domain.Helpers;
-using Models;
+using Models.Models;
 
 namespace Domain.Context
 {
