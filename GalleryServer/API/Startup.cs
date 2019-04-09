@@ -23,6 +23,7 @@ namespace GalleryServer
         public void ConfigureServices(IServiceCollection services)
 		{
 			services.AddMvc();
+            services.AddScoped<IRepositoryContextFactory, RepositoryContextFactory>();
             services.AddDbContext<RepositoryContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             services.AddScoped<IUserRepository>(provider =>
                 new UserRepository(Configuration.GetConnectionString("DefaultConnection"),

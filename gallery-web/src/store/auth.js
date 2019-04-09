@@ -55,11 +55,11 @@ export const auth = {
         authentication: async ({commit, dispatch}, user)=>{
             commit('START_LOADING');
             try {
-                const {json} = await request(process.env.VUE_APP_LOGIN, 'POST', user);
+                const {json} = await request(process.env.VUE_APP_AUTHENTICATION, 'POST', user);
                 dispatch('logout');
                 Cookie.set('user-token', json.access_token, { expires: json.timeOut * 60 });
                 commit('AUTH_SUCCESS');
-                await dispatch('getUserInfo');
+                // await dispatch('getUserInfo');
             }
             catch (error) {
                 if(!error.response || error.response.status !== 401){

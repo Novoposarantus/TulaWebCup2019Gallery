@@ -1,24 +1,47 @@
 y<template>
     <div>
         <div class="box">
-            <form @submit.prevent="submit" class="form">
-                <div class="error font-size-18 margin-bottom-5 text-center" v-if="error">@error</div>
-                <div class="form-item">
-                    <label for="userName" class="form-label">Логин</label>
-                    <input id="userName" v-model="form.userName" class="form-input-text" type="text">
+            <v-form
+                ref="form"
+                class="form-center"
+                v-model="valid"
+                lazy-validation
+            >   
+                <v-layout>
+                    <v-flex 
+                        class="error-text"
+                        text-xs-center
+                        v-if="error"
+                    >
+                        {{error}}
+                    </v-flex>
+                </v-layout>
+                <v-text-field
+                    class="form-item"
+                    v-model="form.userName"
+                    :rules="[v => !!v || 'Поле не моет быть пустым']"
+                    label="Логин"
+                    required
+                ></v-text-field>
+            
+                <v-text-field
+                    class="form-item"
+                    type="password"
+                    v-model="form.password"
+                    :rules="[v => !!v || 'Поле не моет быть пустым']"
+                    label="Пароль"
+                    required
+                ></v-text-field>
+                <div class="text-center">
+                    <v-btn
+                        :disabled="!valid"
+                        color="success"
+                        @click="submit"
+                    >
+                        Войти
+                    </v-btn>
                 </div>
-                <div class="form-item">
-                <div>{{errorForm.password}}</div>
-                    <label for="password" class="form-label">Пароль</label>
-                    <input id="password" v-model="form.password" class="form-input-text" type="password">
-                </div>
-                <div class="btn-box">
-                    <button class="btn">Войти</button>
-                </div>
-                <div class="link-box">
-                    <a @click="toRegistration">Зарегестрироваться</a>
-                </div>
-            </form>
+            </v-form>
         </div>
     </div>
 </template>
@@ -30,13 +53,10 @@ import {routeNames} from '../../support';
 export default {
     data(){
         return{
+            valid: false,
             form:{
                 userName: '',
                 password: '',
-            },
-            errorForm:{
-                userName: '',
-                password: ''
             }
         }
     },
@@ -49,35 +69,34 @@ export default {
         ...mapActions({
             authentication : 'auth/authentication'
         }),
-        async submit(){
-            if(!this.validate()) return;
+        async submit () {
+            if (!this.$refs.form.validate()) {
+                return;
+            }
             await this.authentication({...this.form});
             if(!this.error){
                 this.$router.push({name: routeNames.Gallery});
             }
         },
-        toRegistration(){
-            this.$router.push({name : routeNames.Registration});
-        },
-        validate(){
-            this.errorForm = {
-                userName : "",
-                password : ""
-            }
-            let isEmpty = false;
-            for(let key in this.form){
-                if(this.form[key].length > 0){
-                    continue;
-                }
-                this.$set(this.errorForm, key, "Поле не может быть пустым");
-                isEmpty = true;
-            }
-            return !isEmpty;
-        }
     }
 }
 </script>
 
 <style scoped>
+.box{
+    display: flex;
+}
+.form-center{
+    margin: 0 auto;
+}
+.text-center{
+    text-align: center;
+}
+.form-item{
+    min-width: 250px;
+}
+.error-text{
+    color:red;
+}
 </style>
 

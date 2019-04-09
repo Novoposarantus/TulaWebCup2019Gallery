@@ -17,7 +17,7 @@ namespace API.Controllers
         {
             _userRepository = userRepository;
         }
-        public async Task<IActionResult> Post([FromBody]RegistrationModel model)
+        public IActionResult Post([FromBody]RegistrationModel model)
         {
             if(model.Password != model.PasswordConfirm)
             {
@@ -25,7 +25,7 @@ namespace API.Controllers
             }
             try
             {
-                await _userRepository.SaveNewUser(new User(model.UserName, model.Password, (int)RoleEnum.User));
+                _userRepository.SaveNewUser(new User(model.UserName, model.Password, (int)RoleEnum.User));
             }
             catch (RegistrationException e)
             {

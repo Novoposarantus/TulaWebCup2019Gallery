@@ -19,9 +19,9 @@ namespace API.Controllers
             _userRepository = userRepository;
         }
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] AuthenticationModel model)
+        public IActionResult Post([FromBody] AuthenticationModel model)
         {
-            var user = await _userRepository.GetUser(model.UserName, model.Password);
+            var user = _userRepository.GetUser(model.UserName, model.Password);
             if (user == null)
             {
                 return Unauthorized("Неверный логин или пароль");

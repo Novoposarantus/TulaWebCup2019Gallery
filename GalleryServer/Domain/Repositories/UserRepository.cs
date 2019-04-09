@@ -5,36 +5,40 @@ using Models.Models;
 using Models.Exceptions;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 
 namespace Domain.Repositories
 {
     public class UserRepository : BaseRepository, IUserRepository
     {
         public UserRepository(string connectionString, IRepositoryContextFactory contextFactory) : base(connectionString, contextFactory) { }
-        public IQueryable<User> Users
+        public IEnumerable<User> Users
         {
             get
             {
                 using (var context = ContextFactory.CreateDbContext(ConnectionString))
                 {
-                    return context.Users.Include(user=>user.Role).AsQueryable();
+                    return context.Users.Include(user=>user.Role).ToList();
                 }
             }
         }
 
-        public async Task<User> GetUser(string userName)
+        public User GetUser(string userName)
         {
-            return await Users.FirstOrDefaultAsync(u => u.UserName == userName);
+            return Users.FirstOrDefault(u => u.UserName == userName);
         }
-        public async Task<User> GetUser(string userName, string password)
+        public User GetUser(string userName, string password)
         {
             password = AuthenticationHelper.HashPassword(password);
-            return await Users.FirstOrDefaultAsync(u => u.UserName == userName && u.Password == password);
+            using (var context = ContextFactory.CreateDbContext(ConnectionString))
+            {
+                return context.Users.Include(user => user.Role).FirstOrDefault(u => u.UserName == userName && u.Password == password);
+            }
         }
 
-        public async Task SaveNewUser(User user)
+        public void SaveNewUser(User user)
         {
-            if(await GetUser(user.UserName) != null)
+            if(GetUser(user.UserName) != null)
             {
                 throw new RegistrationException("Пользователь с таким именем уже зарегестрирован");
             }
@@ -42,7 +46,7 @@ namespace Domain.Repositories
             using (var context = ContextFactory.CreateDbContext(ConnectionString))
             {
                 context.Users.Add(user);
-                await context.SaveChangesAsync();
+                context.SaveChanges();
             }
         }
     }

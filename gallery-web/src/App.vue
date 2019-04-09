@@ -19,9 +19,16 @@
             >
               Войти
             </v-btn>
+            <v-btn 
+              flat
+              :to="{ name : routeNames.Registration }"
+              v-if="!isAuthenticated"
+            >
+              Зарегистрироваться
+            </v-btn>
             <v-btn  
               flat
-              @click="logout"
+              @click="onLogout"
               v-if="isAuthenticated"
             >
               Выйти
@@ -58,13 +65,6 @@ export default {
   data(){
     return {
       routeNames,
-      icons: [
-        'fab fa-facebook',
-        'fab fa-twitter',
-        'fab fa-google-plus',
-        'fab fa-linkedin',
-        'fab fa-instagram'
-      ]
     }
   },
   computed:{
@@ -75,7 +75,11 @@ export default {
   methods:{
     ...mapActions({
       logout : 'auth/logout'
-    })
+    }),
+    onLogout(){
+      this.logout();
+      this.$router.push("/");
+    }
   }
 }
 </script>
