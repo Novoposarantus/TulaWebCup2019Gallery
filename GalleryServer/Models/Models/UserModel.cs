@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Models.Models
 {
@@ -17,5 +18,7 @@ namespace Models.Models
         [ForeignKey("RoleModel")]
         public int RoleId { get; set; }
         public RoleModel Role { get; set; }
+        public IEnumerable<UserToImageTag> UserToImageTags { get; set; }
+        public IEnumerable<UserToImageScore> UserToImageScores { get; set; }
     }
 }

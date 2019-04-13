@@ -1,4 +1,4 @@
-﻿namespace Models.DtoModels
+﻿namespace API.DtoModels
 {
     public class AuthenticationModel
     {

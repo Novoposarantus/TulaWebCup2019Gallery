@@ -28,6 +28,9 @@ namespace GalleryServer
             services.AddScoped<IUserRepository>(provider =>
                 new UserRepository(Configuration.GetConnectionString("DefaultConnection"),
                 provider.GetService<IRepositoryContextFactory>()));
+            services.AddScoped<IImageRepository>(provider =>
+                new ImageRepository(Configuration.GetConnectionString("DefaultConnection"),
+                provider.GetService<IRepositoryContextFactory>()));
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                     .AddJwtBearer(options =>

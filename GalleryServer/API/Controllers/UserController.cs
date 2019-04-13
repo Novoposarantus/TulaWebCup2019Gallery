@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Models.DtoModels;
+﻿using API.DtoModels;
 using Models.Enums;
 using Models.Exceptions;
 using Domain.Interfaces;
@@ -27,7 +26,7 @@ namespace API.Controllers
             {
                 _userRepository.SaveNewUser(new UserModel(model.UserName, model.Password, (int)RoleEnum.User));
             }
-            catch (RegistrationException e)
+            catch (UserRepositoryException e)
             {
                 return Unauthorized(e.Message);
             }

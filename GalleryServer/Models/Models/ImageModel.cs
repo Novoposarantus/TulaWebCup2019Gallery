@@ -6,8 +6,8 @@ namespace Models.Models
     {
         public int Id { get; set; }
         public byte[] Image { get; set; }
-        public IEnumerable<TagModel> Tags { get; set; }
-        public IEnumerable<ScoreModel> Scores { get; set; }
+        public IEnumerable<UserToImageTag> UserToImageTags { get; set; }
+        public IEnumerable<UserToImageScore> UserToImageScores { get; set; }
 
     }
 }

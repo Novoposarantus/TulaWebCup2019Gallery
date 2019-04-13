@@ -4,7 +4,6 @@ using Microsoft.EntityFrameworkCore;
 using Models.Models;
 using Models.Exceptions;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Collections.Generic;
 
 namespace Domain.Repositories
@@ -18,21 +17,34 @@ namespace Domain.Repositories
             {
                 using (var context = ContextFactory.CreateDbContext(ConnectionString))
                 {
-                    return context.Users.Include(user=>user.Role).ToList();
+                    return context.Users.Include(user => user.Role);
                 }
             }
         }
 
         public UserModel GetUser(string userName)
         {
-            return Users.FirstOrDefault(u => u.UserName == userName);
+            using (var context = ContextFactory.CreateDbContext(ConnectionString))
+            {
+                var user = context.Users.Include(u => u.Role).FirstOrDefault(u => u.UserName == userName);
+                if (user == null)
+                {
+                    throw new UserRepositoryException("Пользователь с таким логином не найден");
+                }
+                return user;
+            }
         }
         public UserModel GetUser(string userName, string password)
         {
             password = AuthenticationHelper.HashPassword(password);
             using (var context = ContextFactory.CreateDbContext(ConnectionString))
             {
-                return context.Users.Include(user => user.Role).FirstOrDefault(u => u.UserName == userName && u.Password == password);
+                var user = context.Users.Include(u => u.Role).FirstOrDefault(u => u.UserName == userName && u.Password == password);
+                if(user == null)
+                {
+                    throw new UserRepositoryException("Неверный логин или пароль");
+                }
+                return user;
             }
         }
 
@@ -40,7 +52,7 @@ namespace Domain.Repositories
         {
             if(GetUser(user.UserName) != null)
             {
-                throw new RegistrationException("Пользователь с таким именем уже зарегестрирован");
+                throw new UserRepositoryException("Пользователь с таким именем уже зарегестрирован");
             }
             user.Password = AuthenticationHelper.HashPassword(user.Password);
             using (var context = ContextFactory.CreateDbContext(ConnectionString))

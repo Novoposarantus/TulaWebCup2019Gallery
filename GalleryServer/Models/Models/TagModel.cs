@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Models.Models
 {
@@ -6,5 +7,6 @@ namespace Models.Models
     {
         public int Id { get; set; }
         public string Name { get; set; }
+        public IEnumerable<UserToImageTag> UserToImageTags { get; set; }
     }
 }

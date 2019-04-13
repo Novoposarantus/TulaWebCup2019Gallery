@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Models.DtoModels;
 using Domain.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Domain.Helpers;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using API.Options;
+using Models.Models;
+using Models.Exceptions;
+using API.DtoModels;
 
 namespace API.Controllers
 {
@@ -21,10 +23,14 @@ namespace API.Controllers
         [HttpPost]
         public IActionResult Post([FromBody] AuthenticationModel model)
         {
-            var user = _userRepository.GetUser(model.UserName, model.Password);
-            if (user == null)
+            UserModel user;
+            try
             {
-                return Unauthorized("Неверный логин или пароль");
+                user = _userRepository.GetUser(model.UserName, model.Password);
+            }
+            catch(UserRepositoryException e)
+            {
+                return Unauthorized(e.Message);
             }
             var identity = AuthenticationHelper.GetIdentity(user, model.Password);
 
