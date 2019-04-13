@@ -8,7 +8,7 @@ using System.IdentityModel.Tokens.Jwt;
 using API.Options;
 using Models.Models;
 using Models.Exceptions;
-using API.DtoModels;
+using Models.DtoModels;
 
 namespace API.Controllers
 {
@@ -21,7 +21,7 @@ namespace API.Controllers
             _userRepository = userRepository;
         }
         [HttpPost]
-        public IActionResult Post([FromBody] AuthenticationModel model)
+        public IActionResult Post([FromBody] AuthenticationDto model)
         {
             UserModel user;
             try

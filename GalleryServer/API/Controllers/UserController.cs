@@ -1,4 +1,4 @@
-﻿using API.DtoModels;
+﻿using Models.DtoModels;
 using Models.Enums;
 using Models.Exceptions;
 using Domain.Interfaces;
@@ -16,7 +16,7 @@ namespace API.Controllers
         {
             _userRepository = userRepository;
         }
-        public IActionResult Post([FromBody]RegistrationModel model)
+        public IActionResult Post([FromBody]RegistrationDto model)
         {
             if(model.Password != model.PasswordConfirm)
             {

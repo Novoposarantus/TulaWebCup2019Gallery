@@ -2,17 +2,31 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Domain.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Models.DtoModels;
+using Models.Exceptions;
 
 namespace API.Controllers
 {
     public class ImageController : Controller
     {
-
-        public IActionResult Index()
+        readonly IImageRepository _imageRepository;
+        public ImageController(IImageRepository imageRepository)
         {
-            throw new NotImplementedException();
-            return View();
+            _imageRepository = imageRepository;
         }
+        public IActionResult Get(FilterDto filter)
+        {
+            try
+            {
+                return Ok(_imageRepository.GetImages(filter));
+            }
+            catch(ImageRepositoryException e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
     }
 }
