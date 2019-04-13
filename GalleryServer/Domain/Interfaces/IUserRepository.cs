@@ -7,9 +7,9 @@ namespace Domain.Interfaces
 {
     public interface IUserRepository
     {
-        IEnumerable<User> Users { get; }
-        User GetUser(string userName);
-        User GetUser(string userName, string password);
-        void SaveNewUser(User user);
+        IEnumerable<UserModel> Users { get; }
+        UserModel GetUser(string userName);
+        UserModel GetUser(string userName, string password);
+        void SaveNewUser(UserModel user);
     }
 }

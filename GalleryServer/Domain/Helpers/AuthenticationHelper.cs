@@ -9,7 +9,7 @@ namespace Domain.Helpers
 {
     public static class AuthenticationHelper
     {
-        public static IReadOnlyCollection<Claim> GetIdentity(User user, string password)
+        public static IReadOnlyCollection<Claim> GetIdentity(UserModel user, string password)
         {
             List<Claim> claims = null;
             if (user != null)

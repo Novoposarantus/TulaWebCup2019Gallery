@@ -12,7 +12,7 @@ namespace Domain.Repositories
     public class UserRepository : BaseRepository, IUserRepository
     {
         public UserRepository(string connectionString, IRepositoryContextFactory contextFactory) : base(connectionString, contextFactory) { }
-        public IEnumerable<User> Users
+        public IEnumerable<UserModel> Users
         {
             get
             {
@@ -23,11 +23,11 @@ namespace Domain.Repositories
             }
         }
 
-        public User GetUser(string userName)
+        public UserModel GetUser(string userName)
         {
             return Users.FirstOrDefault(u => u.UserName == userName);
         }
-        public User GetUser(string userName, string password)
+        public UserModel GetUser(string userName, string password)
         {
             password = AuthenticationHelper.HashPassword(password);
             using (var context = ContextFactory.CreateDbContext(ConnectionString))
@@ -36,7 +36,7 @@ namespace Domain.Repositories
             }
         }
 
-        public void SaveNewUser(User user)
+        public void SaveNewUser(UserModel user)
         {
             if(GetUser(user.UserName) != null)
             {

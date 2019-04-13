@@ -25,7 +25,7 @@ namespace API.Controllers
             }
             try
             {
-                _userRepository.SaveNewUser(new User(model.UserName, model.Password, (int)RoleEnum.User));
+                _userRepository.SaveNewUser(new UserModel(model.UserName, model.Password, (int)RoleEnum.User));
             }
             catch (RegistrationException e)
             {

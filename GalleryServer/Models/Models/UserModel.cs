@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Models.Models
 {
-    public class User
+    public class UserModel
     {
-        public User() { }
-        public User(string userName, string password, int roleId)
+        public UserModel() { }
+        public UserModel(string userName, string password, int roleId)
         {
             UserName = userName;
             Password = password;
@@ -16,7 +14,8 @@ namespace Models.Models
         public int Id { get;set; }
         public string UserName { get; set; }
         public string Password { get; set; }
+        [ForeignKey("RoleModel")]
         public int RoleId { get; set; }
-        public Role Role { get; set; }
+        public RoleModel Role { get; set; }
     }
 }
