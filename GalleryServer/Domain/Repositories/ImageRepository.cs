@@ -34,7 +34,23 @@ namespace Domain.Repositories
             }
         }
 
-        public IEnumerable<ImageDto> GetImages(FilterDto filter)
+        public ImageDto Get(int id)
+        {
+            using (var context = ContextFactory.CreateDbContext(ConnectionString))
+            {
+                var imageModel = context.Images
+                    .Include(image => image.UserToImageTags)
+                    .ThenInclude(image => image.Tag)
+                    .FirstOrDefault(image => image.Id == id);
+                if(imageModel == null)
+                {
+                    throw new ImageRepositoryException("Картинка не найдена");
+                }
+                return new ImageDto(imageModel);
+            }
+        }
+
+        public IEnumerable<ImageDto> Get(FilterDto filter)
         {
             var minImageCountForPage = filter.ImagesOnPageCount * (filter.PageNumber - 1) + 1;
             using (var context = ContextFactory.CreateDbContext(ConnectionString))
@@ -58,7 +74,7 @@ namespace Domain.Repositories
             }
         }
 
-        public void SaveImage(ImageDto image, int userId)
+        public void Save(ImageDto image, int userId)
         {
             using (var context = ContextFactory.CreateDbContext(ConnectionString))
             {
@@ -75,10 +91,10 @@ namespace Domain.Repositories
             SaveUserToImageTags(tags, image.Id, userId);
         }
 
-        public void AddTags(ImageDto image, int userId)
+        public void AddTags(ImageTagsDto image, int userId)
         {
             var tags = SaveTags(image.Tags);
-            SaveUserToImageTags(tags, image.Id, userId);
+            SaveUserToImageTags(tags, image.ImmageId, userId);
         }
 
         public void AddScore(int scoreValue, int imageId, int userId)
