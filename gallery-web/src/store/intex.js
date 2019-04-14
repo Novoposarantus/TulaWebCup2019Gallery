@@ -1,18 +1,18 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-import {AUTH} from './auth';
-import {GALLERY} from './gallery';
+import {auth} from './auth';
+import {gallery} from './gallery';
 
 import {
-    defaultMutations,
+    defaultMutationsNames,
     globalActions
 } from '@/support';
 
 Vue.use(Vuex);
 
 const modules = {
-    AUTH,
-    GALLERY
+    auth,
+    gallery 
 }
 
 export function createStore() {
@@ -21,7 +21,7 @@ export function createStore() {
         actions:{
             [globalActions.clearStore] : ({commit}) => {
                 for(let moduleName in modules){
-                    commit(`${moduleName}/${defaultMutations.clear}`);
+                    commit(`${moduleName}/${defaultMutationsNames.clear}`);
                 }
             }
         }

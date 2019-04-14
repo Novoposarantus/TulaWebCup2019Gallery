@@ -3,27 +3,28 @@ import {
     defaultGlobalGettersNames,
     defaultMutationsNames, 
     defaultActionsNames,
+    defaultGlobalActionsNames
 } from './default';
 
-export const authNameSpace = 'AUTH';
+export const authNameSpace = 'auth';
 
 export const authState = {
     ...defaultStateNames,
-    isAuthenticated = 'IS_AUTHENTICATED',
-    userData = 'USER_DATA'
+    isAuthenticated : 'IS_AUTHENTICATED',
+    userData : 'USER_DATA'
 }
 
 export const authGetters = {
-    ...authStateNames,
+    ...authState,
     userName: 'USER_NAME',
     roleId : 'ROLE_ID',      
 }
 
 export const authGlobalGetters = {
     ...defaultGlobalGettersNames(authNameSpace),
-    isAuthenticated : `${authNameSpace}/${authGettersNames.isAuthenticated}`,
-    userName        : `${authNameSpace}/${authGettersNames.userName}`,    
-    roleId          : `${authNameSpace}/${authGettersNames.roleId}`,      
+    isAuthenticated : `${authNameSpace}/${authGetters.isAuthenticated}`,
+    userName        : `${authNameSpace}/${authGetters.userName}`,    
+    roleId          : `${authNameSpace}/${authGetters.roleId}`,      
 }
 
 export const authMutations = {
@@ -39,4 +40,11 @@ export const authActions = {
     authentication: 'AUTHENTICATION',
     logout: 'LOGOUT',
     register: 'REGISTER',
+}
+
+export const authGlobalActions = {
+    ...defaultGlobalActionsNames(authNameSpace),
+    authentication: `${authNameSpace}/${authActions.authentication}`,
+    logout: `${authNameSpace}/${authActions.logout}`,
+    register: `${authNameSpace}/${authActions.register}`,
 }

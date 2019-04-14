@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
 {
-    public class BaseController : Controller
+    public class BaseController : ControllerBase
     {
         protected int? _userId;
         public BaseController()

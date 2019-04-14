@@ -50,7 +50,7 @@ namespace Domain.Repositories
             }
         }
 
-        public IEnumerable<ImageDto> Get(FilterDto filter)
+        public List<ImageDto> Get(FilterDto filter)
         {
             var minImageCountForPage = filter.ImagesOnPageCount * (filter.PageNumber - 1) + 1;
             using (var context = ContextFactory.CreateDbContext(ConnectionString))
@@ -58,7 +58,7 @@ namespace Domain.Repositories
                 IEnumerable<ImageDto> images = context.Images
                     .Include(image => image.UserToImageTags)
                     .ThenInclude(image => image.Tag)
-                    .Where(image => filter.Tags == null || filter.Tags.Length == 0
+                    .Where(image => filter.Tags == null || filter.Tags.Count() == 0
                         ? true
                         : image.UserToImageTags.Any(uit => filter.Tags.Contains(uit.Tag.Name)))
                     .Skip(minImageCountForPage - 1)
@@ -82,7 +82,7 @@ namespace Domain.Repositories
                 {
                     Name = image.Name,
                     DateUpload = DateTime.Now,
-                    Image = ImageToByteArray(image.Image)
+                    Image = Convert.FromBase64String(image.Image)
                 };
                 context.Images.Add(imageModel);
                 context.SaveChanges();
@@ -116,7 +116,7 @@ namespace Domain.Repositories
             }
         }
 
-        private IEnumerable<ImageDto> SortImages(IEnumerable<ImageDto> images, FilterDto filter)
+        private List<ImageDto> SortImages(IEnumerable<ImageDto> images, FilterDto filter)
         {
             
             switch (filter.SortBy)
@@ -130,22 +130,13 @@ namespace Domain.Repositories
             }
         }
 
-        private IEnumerable<ImageDto> SortBy<T>(Func<ImageDto,T> keySelector, IEnumerable<ImageDto> images, bool reverseSort)
+        private List<ImageDto> SortBy<T>(Func<ImageDto,T> keySelector, IEnumerable<ImageDto> images, bool reverseSort)
         {
             if (reverseSort)
             {
-                return images.OrderByDescending(keySelector);
+                return images.OrderByDescending(keySelector).ToList();
             }
-            return images.OrderBy(keySelector);
-        }
-
-        private byte[] ImageToByteArray(Image image)
-        {
-            using (var ms = new MemoryStream())
-            {
-                image.Save(ms, image.RawFormat);
-                return ms.ToArray();
-            }
+            return images.OrderBy(keySelector).ToList();
         }
 
         private void SaveUserToImageTags(IEnumerable<TagModel> tags, int imageId, int userId)

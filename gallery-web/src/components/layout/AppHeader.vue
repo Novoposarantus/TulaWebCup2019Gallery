@@ -3,32 +3,32 @@
         <v-toolbar-title>Галерея</v-toolbar-title>
         <v-spacer></v-spacer>
         <v-toolbar-items class="hidden-sm-and-down">
-            <v-btn 
+            <v-btn
               flat
               :to="{ name : routeNames.Gallery }"
             >
-              Галерея
+                Галерея
             </v-btn>
-            <v-btn 
+            <v-btn
               flat
               :to="{ name : routeNames.Login }"
               v-if="!isAuthenticated"
             >
-              Войти
+                Войти
             </v-btn>
-            <v-btn 
+            <v-btn
               flat
               :to="{ name : routeNames.Registration }"
               v-if="!isAuthenticated"
             >
-              Зарегистрироваться
+                Зарегистрироваться
             </v-btn>
-            <v-btn  
+            <v-btn
               flat
               @click="onLogout"
               v-if="isAuthenticated"
             >
-              Выйти
+                Выйти
             </v-btn>
         </v-toolbar-items>
       </v-toolbar>
@@ -39,7 +39,7 @@ import {mapGetters, mapActions} from 'vuex';
 import {
   routeNames,
   authGlobalGetters,
-  authActions
+  authGlobalActions
 } from '@/support';
 export default {
   data(){
@@ -54,7 +54,7 @@ export default {
   },
   methods:{
     ...mapActions({
-      logout : authActions.logout
+      logout : authGlobalActions.logout
     }),
     onLogout(){
       this.logout();

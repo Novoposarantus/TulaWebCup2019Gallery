@@ -9,11 +9,10 @@ import {
     authGetters,
     authActions,
     authMutations,
-    authNameSpace,
     globalActions
 } from '../support';
 
-export const [authNameSpace] = {
+export const auth = {
     namespaced: true,
     state:{
         ...defaultState,
@@ -21,7 +20,7 @@ export const [authNameSpace] = {
         [authState.userData]        : null
     },
     getters:{
-        defaultGetters,
+        ...defaultGetters,
         [authGetters.isAuthenticated]    : (state) => state[authState.isAuthenticated],
         [authGetters.userName]           : (state) => state[authState.userData] 
                                                     ? state[authState.userData].userName 
@@ -42,7 +41,7 @@ export const [authNameSpace] = {
         [authMutations.authLogout]: (state)=>{
             state.isAuthenticated = false;
         },
-        [authMutations.setUserInfo](state, userData){
+        [authMutations.setUserInfo]: (state, userData) =>{
             state.userData = {
                 ...userData
             }

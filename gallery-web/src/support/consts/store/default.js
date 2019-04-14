@@ -21,14 +21,20 @@ export const defaultActionsNames = {
     closeError: 'CLOSE_ERROR'
 }
 
+export function defaultGlobalActionsNames(nameSpace) {
+    return {
+        closeError : `${nameSpace}/${defaultActions.closeError}`,
+    }
+}
+
 export const defaultState = {
-    isLoading : false,
-    error: null
+    [defaultStateNames.isLoading] : false,
+    [defaultStateNames.error]: null
 }
 
 export const defaultGetters = {
-    isLoading : (state) => state[defaultStateNames.isLoading],
-    error : (state) => state[defaultStateNames.error]
+    [defaultStateNames.isLoading] : (state) => state[defaultStateNames.isLoading],
+    [defaultStateNames.error] : (state) => state[defaultStateNames.error]
 }
 
 export const defaultMutations = {

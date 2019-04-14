@@ -1,3 +1,3 @@
 export const globalActions = {
-    clearStore = 'CLEAR_STORE'
+    clearStore : 'CLEAR_STORE'
 }

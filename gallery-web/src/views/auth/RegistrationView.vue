@@ -60,9 +60,8 @@
 <script>
 import {mapActions, mapGetters} from 'vuex';
 import {
-    routeNames,
     authGlobalGetters,
-    authActions
+    authGlobalActions
 } from '../../support';
 
 export default {
@@ -91,7 +90,7 @@ export default {
     },
     methods:{
         ...mapActions({
-            register : authActions.register
+            register : authGlobalActions.register
         }),
         async submit () {
             if (!this.$refs.form.validate()) {

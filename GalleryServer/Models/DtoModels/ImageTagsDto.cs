@@ -5,6 +5,6 @@ namespace Models.DtoModels
     public class ImageTagsDto
     {
         public int ImmageId { get; set; }
-        public IEnumerable<string> Tags { get; set; }
+        public List<string> Tags { get; set; }
     }
 }

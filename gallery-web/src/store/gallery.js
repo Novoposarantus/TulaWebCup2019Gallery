@@ -8,15 +8,21 @@ import {
     defaultState,
     defaultActions,
     defaultMutations,
-    galleryNameSapace
+    sort,
 } from '../support';
 
-export const [galleryNameSapace] = {
+export const gallery = {
     namespaced: true,
     state:{
         ...defaultState,
         [galleryState.images] : [],
-        [galleryState.filter] : {}
+        [galleryState.filter] : {
+            imagesOnPageCount: 50,   
+            pageNumber: 1,
+            tags: [],
+            sortBy: sort.none,          
+            reverseSort: false  
+        }
     },
     getters:{
         ...defaultGetters,
@@ -26,27 +32,62 @@ export const [galleryNameSapace] = {
     mutations:{
         ...defaultMutations,
         [galleryMutations.setImages]: (state, images) => {
-            state.images = [
+            console.log('images',images);
+            state[galleryState.images] = [
                 ...images
             ]
+            console.log('state',state.images);
         },
         [galleryMutations.setFilter]: (state, filter) => {
-            state.filter = {
+            state[galleryState.filter] = {
                 ...filter
             }
         },
+        [galleryMutations.setPageNumaber]: (state, pageNumber) =>{
+            state[galleryState.filter] = {
+                ...state[galleryState.filter],
+                pageNumber
+            }
+        },
+        [galleryMutations.setImagesOnPageCount]: (state, imagesOnPageCount) =>{
+            state[galleryState.filter] = {
+                ...state[galleryState.filter],
+                imagesOnPageCount
+            }
+        },
+        [galleryMutations.setTags]: (state, tags) =>{
+            state[galleryState.filter] = {
+                ...state[galleryState.filter],
+                tags : [
+                    ...tags
+                ]
+            }
+        },
+        [galleryMutations.setSortBy]: (state, sortBy) =>{
+            state[galleryState.filter] = {
+                ...state[galleryState.filter],
+                sortBy
+            }
+        },
+        [galleryMutations.setReverseSort]: (state, reverseSort) =>{
+            state[galleryState.filter] = {
+                ...state[galleryState.filter],
+                reverseSort
+            }
+        },
         [galleryMutations.clear]: (state) => {
-            state.images = [];
-            state.isLoading = false;
-            state.error = null;
+            state[galleryState.images] = [];
+            state[galleryState.isLoading] = false;
+            state[galleryState.error] = null;
+            state[galleryState.filter] = null;
         }
     },
     actions:{
         ...defaultActions,
-        [galleryActions.loadImages]: async ({commit}, filter) => {
+        [galleryActions.loadImages]: async ({commit, state}) => {
             commit(galleryMutations.startLoading);
             try {
-                const {json} = await request(process.env.VUE_APP_IMAGES, 'GET', filter);
+                const {json} = await request(process.env.VUE_APP_IMAGES, 'POST', state[galleryState.filter]);
                 commit(galleryMutations.setImages, json);
             }
             catch (error) {
@@ -59,6 +100,20 @@ export const [galleryNameSapace] = {
                 commit(galleryMutations.finishLoading);
             }
         },
-        
+        [galleryActions.setPageNumaber]: ({commit}, pageNumber)=>{
+            commit(galleryMutations.setPageNumaber, pageNumber);
+        },
+        [galleryActions.setImagesOnPageCount]: ({commit}, imagesOnPageCount)=>{
+            commit(galleryMutations.setImagesOnPageCount, imagesOnPageCount);
+        },
+        [galleryActions.setTags]: ({commit}, tags)=>{
+            commit(galleryMutations.setTags, tags);
+        },
+        [galleryActions.setSortBy]: ({commit}, sortBy)=>{
+            commit(galleryMutations.setSortBy, sortBy);
+        },
+        [galleryActions.setReverseSort]: ({commit}, reverseSort)=>{
+            commit(galleryMutations.setReverseSort, reverseSort);
+        },
     }
 };

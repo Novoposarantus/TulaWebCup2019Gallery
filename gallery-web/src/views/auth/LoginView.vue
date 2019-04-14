@@ -51,7 +51,7 @@ import {mapActions, mapGetters} from 'vuex';
 import {
     routeNames,
     authGlobalGetters,
-    authActions,
+    authGlobalActions,
 } from '../../support';
 
 export default {
@@ -71,7 +71,7 @@ export default {
     },
     methods:{
         ...mapActions({
-            authentication : authActions.authentication
+            authentication : authGlobalActions.authentication
         }),
         async submit () {
             if (!this.$refs.form.validate()) {

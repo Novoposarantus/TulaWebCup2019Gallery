@@ -13,6 +13,7 @@ using Models.DtoModels;
 namespace API.Controllers
 {
     [Route("api/[controller]")]
+    [ApiController]
     public class AuthenticationController : Controller
     {
         readonly IUserRepository _userRepository;

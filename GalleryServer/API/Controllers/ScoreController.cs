@@ -8,33 +8,26 @@ namespace API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ImageController : BaseController
+    [Authorize]
+    public class ScoreController : BaseController
     {
         readonly IImageRepository _imageRepository;
-        public ImageController(IImageRepository imageRepository)
+        public ScoreController(IImageRepository imageRepository)
         {
             _imageRepository = imageRepository;
         }
-
-        [Route("api/[controller]/{id}")]
-        public IActionResult Get(int id)
+        [HttpPost]
+        public IActionResult Post([FromBody]ImageScoreDto scoreInfo)
         {
             try
             {
-                return Ok(_imageRepository.Get(id));
+                _imageRepository.AddScore(scoreInfo.ScoreValue, scoreInfo.ImageId, _userId.Value);
+                return Ok();
             }
             catch (ImageRepositoryException e)
             {
                 return BadRequest(e.Message);
             }
-        }
-
-        [HttpPost]
-        [Authorize]
-        public IActionResult Post([FromBody]ImageDto image)
-        {
-            _imageRepository.Save(image, _userId.Value);
-            return Ok();
         }
     }
 }

@@ -8,7 +8,7 @@ import GalleryView from '@/views/GalleryView';
 import {
     routeNames,
     authGlobalGetters,
-    galleryActions
+    galleryGlobalActions
 } from './support';
 
 Vue.use(VueRouter);
@@ -65,7 +65,7 @@ export function createRouter (store) {
                 name: routeNames.Gallery,
                 component :  GalleryView,
                 beforeEnter: async (_to, _from, next) =>{
-                    await store.dispatch(galleryActions.loadImages);
+                    await store.dispatch(galleryGlobalActions.loadImages);
                     next();
                 }
             },

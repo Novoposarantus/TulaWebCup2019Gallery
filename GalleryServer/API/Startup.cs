@@ -10,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 
 namespace GalleryServer
 {
@@ -62,10 +63,17 @@ namespace GalleryServer
                             }
                         };
                     });
+            services.AddLogging(loggingBuilder =>
+            {
+                loggingBuilder.AddConfiguration(Configuration.GetSection("Logging"));
+                loggingBuilder.AddConsole();
+                loggingBuilder.AddDebug();
+            });
         }
 
-		public void Configure(IApplicationBuilder app, IHostingEnvironment env)
-		{
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        {
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -84,7 +92,7 @@ namespace GalleryServer
             {
                 routes.MapRoute(
                     name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
+                    template: "{controller}/{action}/{id?}");
             });
         }
 	}
