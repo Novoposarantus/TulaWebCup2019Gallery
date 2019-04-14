@@ -5,13 +5,17 @@ import LoginView from '@/views/auth/LoginView';
 import RegistrationView from '@/views/auth/RegistrationView';
 import GalleryView from '@/views/GalleryView';
 
-import {routeNames} from '@/support'
+import {
+    routeNames,
+    authGlobalGetters,
+    galleryActions
+} from './support';
 
 Vue.use(VueRouter);
 
 export function createRouter (store) {
     function ifNotAuthenticated(next){
-        if (store.getters['auth/isAuthenticated']) {
+        if (store.getters[authGlobalGetters.isAuthenticated]) {
             next({name: routeNames.Gallery});
             return false;
         }
@@ -20,7 +24,7 @@ export function createRouter (store) {
 
     // eslint-disable-next-line  
     function ifAuthenticated(next){
-        if (!store.getters['auth/isAuthenticated']) {
+        if (!store.getters[authGlobalGetters.isAuthenticated]) {
             next({name: routeNames.Login});
             return false;
         }
@@ -33,10 +37,9 @@ export function createRouter (store) {
         routes : [
             {
                 path: '/',
+                name : routeNames.Start,
                 redirect: () =>({
-                    name: store.getters['auth/isAuthenticated']
-                        ? routeNames.Gallery
-                        : routeNames.Login
+                    name: routeNames.Gallery
                 })
             },
             {
@@ -60,7 +63,11 @@ export function createRouter (store) {
             {
                 path: `/gallery`,
                 name: routeNames.Gallery,
-                component :  GalleryView
+                component :  GalleryView,
+                beforeEnter: async (_to, _from, next) =>{
+                    await store.dispatch(galleryActions.loadImages);
+                    next();
+                }
             },
 
         ]

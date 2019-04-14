@@ -48,7 +48,11 @@ y<template>
 
 <script>
 import {mapActions, mapGetters} from 'vuex';
-import {routeNames} from '../../support';
+import {
+    routeNames,
+    authGlobalGetters,
+    authActions,
+} from '../../support';
 
 export default {
     data(){
@@ -62,12 +66,12 @@ export default {
     },
     computed:{
         ...mapGetters({
-            error: 'auth/error',
+            error: authGlobalGetters.error,
         })
     },
     methods:{
         ...mapActions({
-            authentication : 'auth/authentication'
+            authentication : authActions.authentication
         }),
         async submit () {
             if (!this.$refs.form.validate()) {

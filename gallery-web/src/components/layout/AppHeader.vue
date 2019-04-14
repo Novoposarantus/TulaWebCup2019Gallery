@@ -36,7 +36,11 @@
 
 <script>
 import {mapGetters, mapActions} from 'vuex';
-import {routeNames} from '@/support';
+import {
+  routeNames,
+  authGlobalGetters,
+  authActions
+} from '@/support';
 export default {
   data(){
     return {
@@ -45,16 +49,16 @@ export default {
   },
   computed:{
     ...mapGetters({
-      isAuthenticated : 'auth/isAuthenticated'
+      isAuthenticated : authGlobalGetters.isAuthenticated
     })
   },
   methods:{
     ...mapActions({
-      logout : 'auth/logout'
+      logout : authActions.logout
     }),
     onLogout(){
       this.logout();
-      this.$router.push("/");
+      this.$router.push({name: routeNames.Gallery});
     }
   }
 }

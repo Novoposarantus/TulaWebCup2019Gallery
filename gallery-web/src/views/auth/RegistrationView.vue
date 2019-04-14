@@ -59,7 +59,11 @@
 
 <script>
 import {mapActions, mapGetters} from 'vuex';
-import {routeNames} from '../../support';
+import {
+    routeNames,
+    authGlobalGetters,
+    authActions
+} from '../../support';
 
 export default {
     data(){
@@ -82,16 +86,13 @@ export default {
     },
     computed:{
         ...mapGetters({
-            error: 'auth/error',
+            error: authGlobalGetters.error,
         })
     },
     methods:{
         ...mapActions({
-            register : 'auth/register'
+            register : authActions.register
         }),
-        toLogin(){
-            this.$router.push({name : routeNames.Login});
-        },
         async submit () {
             if (!this.$refs.form.validate()) {
                 return;
