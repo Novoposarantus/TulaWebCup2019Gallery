@@ -2,6 +2,7 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 import {auth} from './auth';
 import {gallery} from './gallery';
+import {carusel} from './carusel';
 
 import {
     defaultMutationsNames,

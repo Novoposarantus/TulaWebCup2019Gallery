@@ -35,12 +35,7 @@ export default {
     },
     methods:{
         openImage(){
-            this.$router.push({
-                name: routeNames.ImageView,
-                params:{
-                    imageId : this.image.Id
-                }
-            })
+            this.$emit('openImage', image);
         }
     }
 }
