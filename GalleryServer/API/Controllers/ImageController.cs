@@ -19,12 +19,17 @@ namespace API.Controllers
             _imageRepository = imageRepository;
         }
 
-        [Route("api/[controller]/{id}")]
-        public IActionResult Get(int id)
+        [HttpPost]
+        public IActionResult GetImage(FilterIdDto imageData)
         {
+            int? userId = null;
+            if(User != null)
+            {
+                userId = int.Parse(User.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.NameIdentifier).Value);
+            }
             try
             {
-                return Ok(_imageRepository.Get(id));
+                return Ok(_imageRepository.Get(imageData, userId));
             }
             catch (ImageRepositoryException e)
             {

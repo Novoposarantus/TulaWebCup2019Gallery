@@ -16,38 +16,39 @@ export const carusel = {
     namespaced: true,
     state:{
         ...defaultState,
-        [caruselState.images] : [],
-        [caruselState.imagesCount]: 0
+        [caruselState.image] : null,
+        [caruselState.isFirst] : false,
+        [caruselState.isLast] : false,
     },
     getters:{
         ...defaultGetters,
-        [caruselGetters.images] : (state) => state[caruselState.images],
+        [caruselGetters.image] : (state) => state[caruselState.image],
         [caruselGetters.imagesCount]: (state) => state[caruselState.imagesCount]
     },
     mutations:{
         ...defaultMutations,
-        [caruselMutations.setImages]: (state, imagesData) => {
+        [caruselMutations.setImage]: (state, imagesData) => {
             state[caruselState.images] = [
                 ...imagesData.images
             ];
-            state[caruselState.imagesCount] = imagesData.imagesCount;
         },
         [caruselMutations.clear]: (state) => {
             defaultClear(state);
+            state[caruselState.image] = null;
+            state[caruselState.isFirst] = false;
+            state[caruselState.isLast] = false;
         }
     },
     actions:{
         ...defaultActions,
-        [caruselActions.loadImages]: async ({commit, rootState}) => {
+        [caruselActions.loadImage]: async ({commit, rootState}, imageId) => {
             commit(caruselMutations.startLoading);
             try {
-                var filter = {
+                const {json} = await request(process.env.VUE_APP_IMAGE + '/GetImage', 'POST', {
                     ...rootState[galleryGlobalGetters.filter],
-                    imagesOnPageCount: 10000,   
-                    pageNumber: 1,
-                }
-                const {json} = await request(process.env.VUE_APP_IMAGES, 'POST', filter);
-                commit(caruselMutations.setImages, json);
+                    id: imageId
+                });
+                commit(caruselMutations.setImage, json);
             }
             catch (error) {
                 if(!error.response || error.response.status !== 400){

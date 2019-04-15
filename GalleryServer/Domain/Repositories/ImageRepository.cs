@@ -19,22 +19,6 @@ namespace Domain.Repositories
     {
         public ImageRepository(string connectionString, IRepositoryContextFactory contextFactory) : base(connectionString, contextFactory) { }
 
-        public IEnumerable<ImageDto> Images
-        {
-            get
-            {
-                using (var context = ContextFactory.CreateDbContext(ConnectionString))
-                {
-                    return context.Images
-                        .Include(image => image.UserToImageTags)
-                        .ThenInclude(uiTag => uiTag.Tag)
-                        .Include(image => image.UserToImageScores)
-                        .ThenInclude(uiScore => uiScore.Score)
-                        .Select(image => new ImageDto(image));
-                }
-            }
-        }
-
         public int GetImageCount()
         {
             using (var context = ContextFactory.CreateDbContext(ConnectionString))
@@ -43,23 +27,35 @@ namespace Domain.Repositories
             }
         }
 
-        public ImageDto Get(int id)
+        public CaruselImageDto Get(FilterIdDto filter, int? userId = null)
         {
             using (var context = ContextFactory.CreateDbContext(ConnectionString))
             {
-                var imageModel = context.Images
-                    .Include(image => image.UserToImageTags)
-                    .ThenInclude(image => image.Tag)
-                    .FirstOrDefault(image => image.Id == id);
-                if(imageModel == null)
+                IEnumerable<ImageDto> images = context.Images
+                    .Include(i => i.UserToImageTags)
+                    .ThenInclude(i => i.Tag)
+                    .Where(i => filter.Tags == null || filter.Tags.Count() == 0
+                        ? true
+                        : i.UserToImageTags.Any(uit => filter.Tags.Contains(uit.Tag.Name)))
+                    .Select(i => new ImageDto(i, userId));
+                if (images.Count() == 0)
                 {
-                    throw new ImageRepositoryException("Картинка не найдена");
+                    throw new ImageRepositoryException("Недостаточно файлов для вывода страницы");
                 }
-                return new ImageDto(imageModel);
+                var sortedImages = SortImages(images, filter);
+                CaruselImageDto image = sortedImages.FirstOrDefault(i => i.Id == filter.Id) as CaruselImageDto;
+                if(image == null)
+                {
+                    throw new ImageRepositoryException("Изображение не найдено");
+                }
+                var indexOfImage = sortedImages.IndexOf(image);
+                image.IsFirst = indexOfImage == 0;
+                image.IsLast = indexOfImage == sortedImages.Count() - 1;
+                return image;
             }
         }
 
-        public List<ImageDto> Get(FilterDto filter)
+        public List<ImageDto> Get(FilterDto filter, int? userId = null )
         {
             var minImageCountForPage = filter.ImagesOnPageCount * (filter.PageNumber - 1) + 1;
             using (var context = ContextFactory.CreateDbContext(ConnectionString))
@@ -72,7 +68,7 @@ namespace Domain.Repositories
                         : image.UserToImageTags.Any(uit => filter.Tags.Contains(uit.Tag.Name)))
                     .Skip(minImageCountForPage - 1)
                     .Take(filter.ImagesOnPageCount)
-                    .Select(image => new ImageDto(image));
+                    .Select(image => new ImageDto(image, userId));
 
                 if (images.Count() == 0)
                 {

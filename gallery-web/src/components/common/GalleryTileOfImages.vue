@@ -1,6 +1,7 @@
 <template>
     <div>
         <image-container
+            @openImage="openImage($event)"
             v-for="image in images"
             :key="image.id"
             :image="image"
@@ -20,6 +21,11 @@ export default {
             default: function(){
                 return [];
             }
+        }
+    },
+    methods:{
+        openImage(image){
+            this.$emit('openImage', image);
         }
     }
 }

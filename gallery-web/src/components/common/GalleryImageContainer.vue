@@ -18,7 +18,6 @@
                         background-color="grey darken-1"
                         empty-icon="$vuetify.icons.ratingFull"
                         size="10"
-                        half-increments
                     ></v-rating>
                 </div>
             </v-card>
@@ -27,7 +26,6 @@
 </template>
 
 <script>
-import {routeNames} from '@/support';
 
 export default {
     props:{
@@ -35,7 +33,7 @@ export default {
     },
     methods:{
         openImage(){
-            this.$emit('openImage', image);
+            this.$emit('openImage', this.image);
         }
     }
 }

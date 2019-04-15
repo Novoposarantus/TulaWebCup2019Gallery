@@ -14,12 +14,14 @@
 import GalleryContent from '@/components/layout/Gallery/GalleryContent';
 import GalleryHeader from '@/components/layout/Gallery/GalleryHeader';
 import GalleryFooter from '@/components/layout/Gallery/GalleryFooter';
+import ImageModal from '@/components/common/ImageModal';
 
 export default {
     components:{
         GalleryContent,
         GalleryHeader,
-        GalleryFooter
+        GalleryFooter,
+        ImageModal
     }
 }
 </script>

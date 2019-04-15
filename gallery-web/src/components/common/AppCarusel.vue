@@ -1,27 +1,26 @@
 <template>
-    <div>
-        <v-card>
-          <v-img
-            class="white--text"
-            height="400px"
-            :src="image.ImageContent"
-          >
-            <div class="carusel-arrows">
-                <v-icon 
-                    v-if="!disablePrev"
-                    @click="prev">
-                    fas fa-chevron-left
-                </v-icon>
-                <v-spacer></v-spacer>
-                <v-icon 
-                    @click="next"
-                    v-if="!disableNext">
-                    fas fa-chevron-right
-                </v-icon>
-            </div>
-          </v-img>
-        </v-card>
+    <v-img
+    v-if="!!image"
+    :src="image.imageContent"
+    class="white--text"
+    contain
+    >
+    <div class="carusel-arrows">
+        <v-icon 
+            class="icon-hover"
+            v-if="!disablePrev"
+            @click="prev">
+            fas fa-chevron-left
+        </v-icon>
+        <v-spacer></v-spacer>
+        <v-icon 
+            class="icon-hover"
+            @click="next"
+            v-if="!disableNext">
+            fas fa-chevron-right
+        </v-icon>
     </div>
+    </v-img>
 </template>
 
 <script>
@@ -57,6 +56,17 @@ export default {
 .carusel-arrows{
     display: flex;
     align-items: center;
+    padding: 20px;
+    height: 100%;
+}
+.icon-hover{
+    background-color: white;
+    padding: 5px 20px;
+    opacity: 0.3;
+}
+.icon-hover:hover{
+    opacity: 0.7;
+    box-shadow: 0 0 10px rgba(0,0,0,0.5);
 }
 </style>
 

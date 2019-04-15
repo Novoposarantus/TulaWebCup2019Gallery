@@ -5,9 +5,8 @@ namespace Domain.Interfaces
 {
     public interface IImageRepository
     {
-        IEnumerable<ImageDto> Images { get; }
-        ImageDto Get(int id);
-        List<ImageDto> Get(FilterDto filter);
+        CaruselImageDto Get(FilterIdDto imageData, int? userId = null);
+        List<ImageDto> Get(FilterDto filter, int? userId = null);
         int GetImageCount();
         void Save(List<ImageDto> image, int userId);
         void AddTags(ImageTagsDto image, int userId);
