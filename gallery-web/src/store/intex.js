@@ -12,7 +12,8 @@ Vue.use(Vuex);
 
 const modules = {
     auth,
-    gallery 
+    gallery,
+    carusel
 }
 
 export function createStore() {
