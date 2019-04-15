@@ -90,9 +90,10 @@ namespace GalleryServer
             app.UseAuthentication();
             app.UseMvc(routes =>
             {
-                routes.MapRoute(
-                    name: "default",
-                    template: "{controller}/{action}/{id?}");
+                routes
+                .MapRoute(
+                    name: "api",
+                    template: "api/{controller}/{action}/{id?}");
             });
         }
 	}

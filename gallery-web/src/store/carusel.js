@@ -17,26 +17,25 @@ export const carusel = {
     state:{
         ...defaultState,
         [caruselState.image] : null,
-        [caruselState.isFirst] : false,
-        [caruselState.isLast] : false,
     },
     getters:{
         ...defaultGetters,
-        [caruselGetters.image] : (state) => state[caruselState.image],
-        [caruselGetters.imagesCount]: (state) => state[caruselState.imagesCount]
+        [caruselGetters.image] : (state) => state[caruselState.image]
     },
     mutations:{
         ...defaultMutations,
-        [caruselMutations.setImage]: (state, imagesData) => {
-            state[caruselState.images] = [
-                ...imagesData.images
-            ];
+        [caruselMutations.setImage]: (state, image) => {
+            if(image == null){
+                state[caruselState.image] = null;
+                return;
+            }
+            state[caruselState.image] = {
+                ...image
+            };
         },
         [caruselMutations.clear]: (state) => {
             defaultClear(state);
             state[caruselState.image] = null;
-            state[caruselState.isFirst] = false;
-            state[caruselState.isLast] = false;
         }
     },
     actions:{
@@ -60,5 +59,46 @@ export const carusel = {
                 commit(caruselMutations.finishLoading);
             }
         },
+        [caruselActions.next]: async ({commit, rootState}, imageId) => {
+            commit(caruselMutations.startLoading);
+            try {
+                const {json} = await request(process.env.VUE_APP_IMAGE + '/GetNext', 'POST', {
+                    ...rootState[galleryGlobalGetters.filter],
+                    id: imageId
+                });
+                commit(caruselMutations.setImage, json);
+            }
+            catch (error) {
+                if(!error.response || error.response.status !== 400){
+                    commit(caruselMutations.setError);
+                }
+                else{
+                    commit(caruselMutations.setError, error.response.data);
+                }
+                commit(caruselMutations.finishLoading);
+            }
+        },
+        [caruselActions.prev]: async ({commit, rootState}, imageId) => {
+            commit(caruselMutations.startLoading);
+            try {
+                const {json} = await request(process.env.VUE_APP_IMAGE + '/GetPrev', 'POST', {
+                    ...rootState[galleryGlobalGetters.filter],
+                    id: imageId
+                });
+                commit(caruselMutations.setImage, json);
+            }
+            catch (error) {
+                if(!error.response || error.response.status !== 400){
+                    commit(caruselMutations.setError);
+                }
+                else{
+                    commit(caruselMutations.setError, error.response.data);
+                }
+                commit(caruselMutations.finishLoading);
+            }
+        },
+        [caruselActions.setImage]: ({commit}, image) => {
+            commit(caruselMutations.setImage, image);
+        }
     }
 };

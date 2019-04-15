@@ -5,6 +5,8 @@ namespace Domain.Interfaces
 {
     public interface IImageRepository
     {
+        CaruselImageDto GetNext(FilterIdDto filter, int? userId = null);
+        CaruselImageDto GetPrev(FilterIdDto filter, int? userId = null);
         CaruselImageDto Get(FilterIdDto imageData, int? userId = null);
         List<ImageDto> Get(FilterDto filter, int? userId = null);
         int GetImageCount();

@@ -26,14 +26,19 @@
 </template>
 
 <script>
+import {mapActions} from 'vuex';
+import {caruselGlobalActions} from '@/support';
 
 export default {
     props:{
         image: Object
     },
     methods:{
+        ...mapActions({
+            loadImage : caruselGlobalActions.loadImage
+        }),
         openImage(){
-            this.$emit('openImage', this.image);
+            this.loadImage(this.image.id);
         }
     }
 }

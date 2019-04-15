@@ -1,12 +1,9 @@
 <template>
     <div>
         <tile-of-images
-            @openImage="openImage($event)"
             :images="images"
         ></tile-of-images>
-        <image-modal
-          @closeDialog="closeDialog"
-          :image="selectedImage"></image-modal>
+        <image-modal></image-modal>
     </div>
 </template>
 
@@ -21,25 +18,10 @@ export default {
         TileOfImages,
         ImageModal
     },
-    data(){
-      return{
-        selectedImage: null
-      }
-    },
     computed:{
         ...mapGetters({
             images : galleryGlobalGetters.images
         })
-    },
-    methods:{
-      closeDialog(){
-        this.selectedImage = null;
-      },
-      openImage(image){
-          this.selectedImage = {
-              ...image
-          }
-      }
     }
 }
 </script>

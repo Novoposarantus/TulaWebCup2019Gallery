@@ -27,32 +27,47 @@ namespace Domain.Repositories
             }
         }
 
-        public CaruselImageDto Get(FilterIdDto filter, int? userId = null)
+        public CaruselImageDto GetNext(FilterIdDto filter, int? userId = null)
         {
             using (var context = ContextFactory.CreateDbContext(ConnectionString))
             {
-                IEnumerable<ImageDto> images = context.Images
-                    .Include(i => i.UserToImageTags)
-                    .ThenInclude(i => i.Tag)
-                    .Where(i => filter.Tags == null || filter.Tags.Count() == 0
-                        ? true
-                        : i.UserToImageTags.Any(uit => filter.Tags.Contains(uit.Tag.Name)))
-                    .Select(i => new ImageDto(i, userId));
-                if (images.Count() == 0)
+                var currentImage = GetImage(filter, out List<CaruselImageDto> sortedImages, out int indexOfImage, userId);
+
+                if (indexOfImage + 1 >= sortedImages.Count())
                 {
-                    throw new ImageRepositoryException("Недостаточно файлов для вывода страницы");
+                    throw new ImageRepositoryException("Вне гранниц данных");
                 }
-                var sortedImages = SortImages(images, filter);
-                CaruselImageDto image = sortedImages.FirstOrDefault(i => i.Id == filter.Id) as CaruselImageDto;
-                if(image == null)
-                {
-                    throw new ImageRepositoryException("Изображение не найдено");
-                }
-                var indexOfImage = sortedImages.IndexOf(image);
-                image.IsFirst = indexOfImage == 0;
-                image.IsLast = indexOfImage == sortedImages.Count() - 1;
-                return image;
+                indexOfImage++;
+                currentImage = sortedImages[indexOfImage];
+                currentImage.IsFirst = indexOfImage == 0;
+                currentImage.IsLast = indexOfImage == sortedImages.Count() - 1;
+                return currentImage;
             }
+        }
+
+        public CaruselImageDto GetPrev(FilterIdDto filter, int? userId = null)
+        {
+            using (var context = ContextFactory.CreateDbContext(ConnectionString))
+            {
+                var currentImage = GetImage(filter, out List<CaruselImageDto> sortedImages, out int indexOfImage, userId);
+                if(indexOfImage - 1 < 0)
+                {
+                    throw new ImageRepositoryException("Вне гранниц данных");
+                }
+                indexOfImage--;
+                currentImage = sortedImages[indexOfImage];
+                currentImage.IsFirst = indexOfImage == 0;
+                currentImage.IsLast = indexOfImage == sortedImages.Count() - 1;
+                return currentImage;
+            }
+        }
+
+        public CaruselImageDto Get(FilterIdDto filter, int? userId = null)
+        {
+            var currentImage = GetImage(filter, out List<CaruselImageDto> sortedImages, out int indexOfImage, userId);
+            currentImage.IsFirst = indexOfImage == 0;
+            currentImage.IsLast = indexOfImage == sortedImages.Count() - 1;
+            return currentImage;
         }
 
         public List<ImageDto> Get(FilterDto filter, int? userId = null )
@@ -61,6 +76,8 @@ namespace Domain.Repositories
             using (var context = ContextFactory.CreateDbContext(ConnectionString))
             {
                 IEnumerable<ImageDto> images = context.Images
+                    .Include(image=>image.UserToImageScores)
+                    .ThenInclude(image=>image.Score)
                     .Include(image => image.UserToImageTags)
                     .ThenInclude(image => image.Tag)
                     .Where(image => filter.Tags == null || filter.Tags.Count() == 0
@@ -123,6 +140,31 @@ namespace Domain.Repositories
             }
         }
 
+        private CaruselImageDto GetImage(FilterIdDto filter, out List<CaruselImageDto> sortedImages, out int indexOfImage, int? userId = null)
+        {
+            using (var context = ContextFactory.CreateDbContext(ConnectionString))
+            {
+                IEnumerable<ImageDto> images = context.Images
+                    .Include(image => image.UserToImageScores)
+                    .ThenInclude(image => image.Score)
+                    .Include(image => image.UserToImageTags)
+                    .ThenInclude(image => image.Tag)
+                    .Select(image => new ImageDto(image, userId));
+
+                if (images.Count() == 0)
+                {
+                    throw new ImageRepositoryException("Недостаточно файлов для вывода страницы");
+                }
+                sortedImages = SortImages(images, filter).Select(image=> new CaruselImageDto(image)).ToList();
+                CaruselImageDto currentImage = sortedImages.FirstOrDefault(i => i.Id == filter.Id);
+                if (currentImage == null)
+                {
+                    throw new ImageRepositoryException("Изображение не найдено");
+                }
+                indexOfImage = sortedImages.IndexOf(currentImage);
+                return currentImage;
+            }
+        }
         private List<ImageDto> SortImages(IEnumerable<ImageDto> images, FilterDto filter)
         {
             

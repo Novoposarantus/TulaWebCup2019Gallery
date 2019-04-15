@@ -100,27 +100,6 @@ export const gallery = {
                 commit(galleryMutations.finishLoading);
             }
         },
-        [galleryActions.loadAllImages]: async ({commit, state})=>{
-            commit(galleryMutations.startLoading);
-            try {
-                var filter = {
-                    ...state[galleryState.filter],
-                    imagesOnPageCount: 10000,   
-                    pageNumber: 1,
-                }
-                const {json} = await request(process.env.VUE_APP_IMAGES, 'POST', filter);
-                commit(galleryMutations.setImages, json);
-            }
-            catch (error) {
-                if(!error.response || error.response.status !== 400){
-                    commit(galleryMutations.setError);
-                }
-                else{
-                    commit(galleryMutations.setError, error.response.data);
-                }
-                commit(galleryMutations.finishLoading);
-            }
-        },
         [galleryActions.setPageNumber]: async ({commit, dispatch}, pageNumber)=>{
             commit(galleryMutations.setPageNumber, pageNumber);
             await dispatch(galleryActions.loadImages);
@@ -144,7 +123,7 @@ export const gallery = {
         [galleryActions.saveImages]: async ({commit}, images)=>{
             commit(galleryMutations.startLoading);
             try {
-                await request(process.env.VUE_APP_IMAGE, 'POST', images);
+                await request(process.env.VUE_APP_IMAGE, 'PUT', images);
             }
             catch (error) {
                 if(!error.response || error.response.status !== 400){

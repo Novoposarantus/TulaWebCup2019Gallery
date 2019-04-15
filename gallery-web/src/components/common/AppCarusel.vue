@@ -1,8 +1,7 @@
 <template>
     <v-img
-    v-if="!!image"
     :src="image.imageContent"
-    class="white--text"
+    class="white--text carusel-image"
     contain
     >
     <div class="carusel-arrows">
@@ -12,6 +11,11 @@
             @click="prev">
             fas fa-chevron-left
         </v-icon>
+        <v-icon 
+            class="icon-hover-disable"
+            v-if="disablePrev">
+            fas fa-chevron-left
+        </v-icon>
         <v-spacer></v-spacer>
         <v-icon 
             class="icon-hover"
@@ -19,34 +23,40 @@
             v-if="!disableNext">
             fas fa-chevron-right
         </v-icon>
+        <v-icon 
+            class="icon-hover-disable"
+            v-if="disableNext">
+            fas fa-chevron-right
+        </v-icon>
     </div>
     </v-img>
 </template>
 
 <script>
-import {mapGetters} from 'vuex';
-import {galleryGlobalGetters} from '@/support';
+import {mapGetters, mapActions} from 'vuex';
+import {caruselGlobalGetters, caruselGlobalActions} from '@/support';
 export default {
-    props:{
-        image: Object
-    },
     computed:{
         ...mapGetters({
-            images: galleryGlobalGetters.images
+            image: caruselGlobalGetters.image
         }),
         disablePrev(){
-            return this.images.indexOf(this.currentImage) == 0;
+            return this.image.isFirst;
         },
         disableNext(){
-            return this.images.indexOf(this.currentImage) == this.images.length - 1;
+            return this.image.isLast;
         }
     },
     methods:{
+        ...mapActions({
+            nextImage: caruselGlobalActions.next,
+            prevImage: caruselGlobalActions.prev
+        }),
         next(){
-            this.$emit('next');
+            this.nextImage(this.image.id);
         },
         prev(){
-            this.$emit('prev');
+            this.prevImage(this.image.id);
         }
     },
 }
@@ -67,6 +77,9 @@ export default {
 .icon-hover:hover{
     opacity: 0.7;
     box-shadow: 0 0 10px rgba(0,0,0,0.5);
+}
+.carusel-image{
+    max-height: 400px;
 }
 </style>
 

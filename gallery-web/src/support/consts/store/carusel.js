@@ -10,9 +10,7 @@ export const caruselNameSapace = 'carusel'
 
 export const caruselState = {
     ...defaultStateNames,
-    image : 'IMAGE',
-    isFirst : 'IS_FIRST',
-    isLast : 'IS_LAST'
+    image : 'IMAGE'
 }
 
 export const caruselGetters = {
@@ -21,9 +19,7 @@ export const caruselGetters = {
 
 export const caruselGlobalGetters = {
     ...defaultGlobalGettersNames(caruselNameSapace),
-    image : `${caruselNameSapace}/${caruselGetters.image}`,
-    isFirst : `${caruselNameSapace}/${caruselGetters.isFirst}`,
-    isLast : `${caruselNameSapace}/${caruselGetters.isLast}`,         
+    image : `${caruselNameSapace}/${caruselGetters.image}`      
 }
 
 export const caruselMutations = {
@@ -33,10 +29,16 @@ export const caruselMutations = {
 
 export const caruselActions = {
     ...defaultActionsNames,
-    loadImage: 'LOAD_IMAGE'
+    loadImage: 'LOAD_IMAGE',
+    setImage: 'SET_IMAGE',
+    next: 'NEXT',
+    prev: 'PREV'
 }
 
 export const caruselGlobalActions = {
     ...defaultGlobalActionsNames(caruselNameSapace),
     loadImage: `${caruselNameSapace}/${caruselActions.loadImage}`,
+    setImage: `${caruselNameSapace}/${caruselActions.setImage}`,
+    next: `${caruselNameSapace}/${caruselActions.next}`,
+    prev: `${caruselNameSapace}/${caruselActions.prev}`,
 }
