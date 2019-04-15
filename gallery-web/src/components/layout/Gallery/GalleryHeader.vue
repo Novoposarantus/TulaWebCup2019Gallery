@@ -19,6 +19,12 @@
                 v-model="reverseSort"
                 :label="filterReverseName"
             ></v-switch>
+            <v-select
+                @change="changeImagesOnPage"
+                class="images-on-page-select"
+                :items="imageOnPage"
+                label="Картинок на странице"
+            ></v-select>
         </div>
     </div>
 </template>
@@ -49,7 +55,25 @@ export default {
                     text: 'По рейтингу',
                     value: sort.rating
                 }
-            ]
+            ],
+            imageOnPage:[
+                {
+                    text: '10',
+                    value: 10
+                },
+                {
+                    text: '20',
+                    value: 20
+                },
+                {
+                    text: '50',
+                    value: 50
+                },
+                {
+                    text: 'Все',
+                    value: null
+                }
+            ],
         }
     },
     computed:{
@@ -67,21 +91,25 @@ export default {
             get(){
                 return this.filter.reverseSort;
             },
-            set(value){
-                this.setReverseSort(value);
+            async set(value){
+                await this.setReverseSort(value);
             }
         }
     },
     methods:{
         ...mapActions({
             setSort: galleryGlobalActions.setSortBy,
-            setReverseSort: galleryGlobalActions.setReverseSort
+            setReverseSort: galleryGlobalActions.setReverseSort,
+            setImagesOnPageCount: galleryGlobalActions.setImagesOnPageCount,
         }),
         loadImage(){
             this.$router.push({name: routeNames.LoadImages});
         },
-        changeSortBy(sortId){
+        async changeSortBy(sortId){
             this.setSort(sortId);
+        },
+        async changeImagesOnPage(imagesOnPage){
+            this.setImagesOnPageCount(imagesOnPage);
         }
     }
 }
@@ -100,8 +128,14 @@ export default {
     margin: 5px 20px;
 }
 .filter-select{
-    display: inline-block;
     max-width: 150px;
+}
+.images-on-page-select{
+    max-width: 200px;
+}
+.filter-select,
+.images-on-page-select{
+    display: inline-block;
     margin: 5px 20px;
 }
 </style>

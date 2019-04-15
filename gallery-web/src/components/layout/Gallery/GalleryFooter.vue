@@ -1,6 +1,7 @@
 <template>
     <div class="pagination-container">
       <v-pagination
+        v-if="showPagination"
         v-model="pageNumber"
         :length="paginationLength"
         :total-visible="7"
@@ -38,6 +39,9 @@ export default {
                     }
                 })
             }
+        },
+        showPagination(){
+            return this.filter.imagesOnPageCount != null && this.paginationLength > 1;
         }
     },
     methods:{

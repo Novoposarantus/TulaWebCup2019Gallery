@@ -73,8 +73,8 @@ namespace Domain.Repositories
         public List<ImageDto> Get(FilterDto filter, int? userId = null )
         {
             var minImageCountForPage = filter.ImagesOnPageCount.HasValue
-                ? 0
-                : filter.ImagesOnPageCount.Value * (filter.PageNumber - 1) + 1;
+                ? filter.ImagesOnPageCount.Value * (filter.PageNumber - 1) + 1
+                : 0;
             using (var context = ContextFactory.CreateDbContext(ConnectionString))
             {
                 IEnumerable<ImageDto> images = context.Images

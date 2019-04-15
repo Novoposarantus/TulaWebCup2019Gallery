@@ -64,13 +64,17 @@ namespace Domain.Repositories
 
         public void SaveNewUser(UserModel user)
         {
-            if(GetUser(user.UserName) != null)
+            try
             {
+                GetUser(user.UserName);
                 throw new UserRepositoryException("Пользователь с таким именем уже зарегестрирован");
             }
+            catch (UserRepositoryException) { }
             user.Password = AuthenticationHelper.HashPassword(user.Password);
+            user.RoleId = 1;
             using (var context = ContextFactory.CreateDbContext(ConnectionString))
             {
+                user.Id = 0;
                 context.Users.Add(user);
                 context.SaveChanges();
             }
