@@ -8,6 +8,7 @@ namespace Domain.Interfaces
         IEnumerable<ImageDto> Images { get; }
         ImageDto Get(int id);
         List<ImageDto> Get(FilterDto filter);
+        int GetImageCount();
         void Save(List<ImageDto> image, int userId);
         void AddTags(ImageTagsDto image, int userId);
         void AddScore(int scoreValue, int imageId, int userId);

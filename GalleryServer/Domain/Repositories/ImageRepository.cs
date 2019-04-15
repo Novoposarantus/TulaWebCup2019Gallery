@@ -35,6 +35,14 @@ namespace Domain.Repositories
             }
         }
 
+        public int GetImageCount()
+        {
+            using (var context = ContextFactory.CreateDbContext(ConnectionString))
+            {
+                return context.Images.Count();
+            }
+        }
+
         public ImageDto Get(int id)
         {
             using (var context = ContextFactory.CreateDbContext(ConnectionString))

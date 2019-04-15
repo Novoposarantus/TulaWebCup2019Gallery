@@ -11,7 +11,8 @@ export const galleryNameSapace = 'gallery'
 export const galleryState = {
     ...defaultStateNames,
     images : 'IMAGES',
-    filter : 'FILTER'
+    filter : 'FILTER',
+    imagesCount: 'IMAGES_COUNT'
 }
 
 export const galleryGetters = {
@@ -21,7 +22,8 @@ export const galleryGetters = {
 export const galleryGlobalGetters = {
     ...defaultGlobalGettersNames(galleryNameSapace),
     images : `${galleryNameSapace}/${galleryGetters.images}`,
-    filter : `${galleryNameSapace}/${galleryGetters.filter}`,     
+    filter : `${galleryNameSapace}/${galleryGetters.filter}`, 
+    imagesCount : `${galleryNameSapace}/${galleryGetters.imagesCount}`,     
 }
 
 export const galleryMutations = {
@@ -43,7 +45,8 @@ export const galleryActions = {
     setImagesOnPageCount : 'SET_IMAGES_ON_PAGE_COUNT',
     setTags : 'SET_TAGS',
     setSortBy : 'SET_SORT_BY',
-    setReverseSort: 'SET_REVERSE_SORT'
+    setReverseSort: 'SET_REVERSE_SORT',
+    loadAllImages: 'LOAD_ALL_IMAGES'
 }
 
 export const galleryGlobalActions = {
@@ -55,4 +58,5 @@ export const galleryGlobalActions = {
     setSortBy : `${galleryNameSapace}/${galleryActions.setSortBy}`,
     setReverseSort: `${galleryNameSapace}/${galleryActions.setReverseSort}`,
     saveImages: `${galleryNameSapace}/${galleryActions.saveImages}`,
+    loadAllImages: `${galleryNameSapace}/${galleryActions.loadAllImages}`,
 }

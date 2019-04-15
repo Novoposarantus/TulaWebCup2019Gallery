@@ -18,24 +18,27 @@ export const gallery = {
         ...defaultState,
         [galleryState.images] : [],
         [galleryState.filter] : {
-            imagesOnPageCount: 50,   
+            imagesOnPageCount: 20,   
             pageNumber: 1,
             tags: [],
             sortBy: sort.none,          
             reverseSort: false  
-        }
+        },
+        [galleryState.imagesCount]: 0
     },
     getters:{
         ...defaultGetters,
         [galleryGetters.images] : (state) => state[galleryState.images],
-        [galleryGetters.filter] : (state) => state[galleryState.filter]
+        [galleryGetters.filter] : (state) => state[galleryState.filter],
+        [galleryGetters.imagesCount]: (state) => state[galleryState.imagesCount]
     },
     mutations:{
         ...defaultMutations,
-        [galleryMutations.setImages]: (state, images) => {
+        [galleryMutations.setImages]: (state, imagesData) => {
             state[galleryState.images] = [
-                ...images
-            ]
+                ...imagesData.images
+            ];
+            state[galleryState.imagesCount] = imagesData.imagesCount;
         },
         [galleryMutations.setFilter]: (state, filter) => {
             state[galleryState.filter] = {
@@ -97,20 +100,46 @@ export const gallery = {
                 commit(galleryMutations.finishLoading);
             }
         },
-        [galleryActions.setPageNumber]: ({commit}, pageNumber)=>{
+        [galleryActions.loadAllImages]: async ({commit, state})=>{
+            commit(galleryMutations.startLoading);
+            try {
+                var filter = {
+                    ...state[galleryState.filter],
+                    imagesOnPageCount: 10000,   
+                    pageNumber: 1,
+                }
+                const {json} = await request(process.env.VUE_APP_IMAGES, 'POST', filter);
+                commit(galleryMutations.setImages, json);
+            }
+            catch (error) {
+                if(!error.response || error.response.status !== 400){
+                    commit(galleryMutations.setError);
+                }
+                else{
+                    commit(galleryMutations.setError, error.response.data);
+                }
+                commit(galleryMutations.finishLoading);
+            }
+        },
+        [galleryActions.setPageNumber]: async ({commit, dispatch}, pageNumber)=>{
             commit(galleryMutations.setPageNumber, pageNumber);
+            await dispatch(galleryActions.loadImages);
         },
-        [galleryActions.setImagesOnPageCount]: ({commit}, imagesOnPageCount)=>{
+        [galleryActions.setImagesOnPageCount]: async ({commit, dispatch}, imagesOnPageCount)=>{
             commit(galleryMutations.setImagesOnPageCount, imagesOnPageCount);
+            await dispatch(galleryActions.loadImages);
         },
-        [galleryActions.setTags]: ({commit}, tags)=>{
+        [galleryActions.setTags]: async ({commit, dispatch}, tags)=>{
             commit(galleryMutations.setTags, tags);
+            await dispatch(galleryActions.loadImages);
         },
-        [galleryActions.setSortBy]: ({commit}, sortBy)=>{
+        [galleryActions.setSortBy]: async ({commit, dispatch}, sortBy)=>{
             commit(galleryMutations.setSortBy, sortBy);
+            await dispatch(galleryActions.loadImages);
         },
-        [galleryActions.setReverseSort]: ({commit}, reverseSort)=>{
+        [galleryActions.setReverseSort]: async ({commit, dispatch}, reverseSort)=>{
             commit(galleryMutations.setReverseSort, reverseSort);
+            await dispatch(galleryActions.loadImages);
         },
         [galleryActions.saveImages]: async ({commit}, images)=>{
             commit(galleryMutations.startLoading);

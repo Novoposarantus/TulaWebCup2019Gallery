@@ -19,10 +19,11 @@ export default {
     computed:{
         ...mapGetters({
             images : galleryGlobalGetters.images,
-            filter : galleryGlobalGetters.filter
+            filter : galleryGlobalGetters.filter,
+            imagesCount : galleryGlobalGetters.imagesCount
         }),
         paginationLength(){
-            return Math.ceil(this.images.length / this.filter.imagesOnPageCount);
+            return Math.ceil(this.imagesCount / this.filter.imagesOnPageCount);
         },
         pageNumber: {
             get(){

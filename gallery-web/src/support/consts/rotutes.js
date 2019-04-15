@@ -4,5 +4,8 @@ export const routeNames = {
     StartGallery: 'StartGallery',
     Login: 'Login',
     Registration: 'Registration',
-    LoadImages: 'LoadImages'
+    LoadImages: 'LoadImages',
+    StartImageView: 'StartImageView',
+    ImageView: 'ImageView',
+
 }

@@ -20,7 +20,7 @@ namespace API.Controllers
             try
             {
                 var images = _imageRepository.Get(filter);
-                return Ok(images);
+                return Ok(new { images, imagesCount = _imageRepository.GetImageCount()});
             }
             catch (ImageRepositoryException e)
             {

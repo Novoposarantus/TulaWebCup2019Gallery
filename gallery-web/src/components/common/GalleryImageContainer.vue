@@ -2,6 +2,8 @@
     <div class="image-container">
         <v-hover>
             <v-card
+                slot-scope="{ hover }"
+                :class="`elevation-${hover ? 12 : 2}`"
                 @click="openImage"
                 class="image-container-card">
                 <v-img
@@ -25,13 +27,20 @@
 </template>
 
 <script>
+import {routeNames} from '@/support';
+
 export default {
     props:{
         image: Object
     },
     methods:{
         openImage(){
-            this.$emit('openImage', this.image);
+            this.$router.push({
+                name: routeNames.ImageView,
+                params:{
+                    imageId : this.image.Id
+                }
+            })
         }
     }
 }

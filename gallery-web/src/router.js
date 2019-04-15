@@ -4,7 +4,7 @@ import VueRouter from 'vue-router';
 import LoginView from '@/views/auth/LoginView';
 import RegistrationView from '@/views/auth/RegistrationView';
 import GalleryView from '@/views/GalleryView';
-import ImagesLoader from '@/views/ImagesLoader';
+import ImagesLoaderView from '@/views/ImagesLoaderView';
 
 import {
     routeNames,
@@ -75,7 +75,6 @@ export function createRouter (store) {
                 component :  GalleryView,
                 beforeEnter: async (to, _from, next) =>{
                     store.dispatch(galleryGlobalActions.setPageNumber, to.params.pageNumber);
-                    await store.dispatch(galleryGlobalActions.loadImages);
                     if(store.getters[galleryGlobalGetters.error]) {
                         next({name:routeNames.StartGallery});
                         return;
@@ -86,14 +85,14 @@ export function createRouter (store) {
             {
                 path: `/load-images`,
                 name: routeNames.LoadImages,
-                component :  ImagesLoader,
+                component :  ImagesLoaderView,
                 beforeEnter: async (_to, _from, next) =>{
                     if(!ifAuthenticated(next)){
                         return;
                     }
                     next();
                 }
-            },
+            }
         ]
     });
 }

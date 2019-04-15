@@ -14,6 +14,7 @@
 import GalleryContent from '@/components/layout/Gallery/GalleryContent';
 import GalleryHeader from '@/components/layout/Gallery/GalleryHeader';
 import GalleryFooter from '@/components/layout/Gallery/GalleryFooter';
+
 export default {
     components:{
         GalleryContent,

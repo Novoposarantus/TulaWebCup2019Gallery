@@ -2,6 +2,7 @@
     <div>
         <div class="galery-header">
             <v-btn
+                v-if="isAuthenticated"
                 @click="loadImage">
                 <v-icon>fas fa-file-image</v-icon>
                 <span class="hidden-xs-only button-text">Загрузить изображения</span>
@@ -11,12 +12,19 @@
 </template>
 
 <script>
-import {routeNames} from '@/support';
+import {mapGetters} from 'vuex';
+import {routeNames, authGlobalGetters} from '@/support';
+
 export default {
     methods:{
         loadImage(){
             this.$router.push({name: routeNames.LoadImages});
         }
+    },
+    computed:{
+        ...mapGetters({
+            isAuthenticated: authGlobalGetters.isAuthenticated
+        })
     }
 }
 </script>
