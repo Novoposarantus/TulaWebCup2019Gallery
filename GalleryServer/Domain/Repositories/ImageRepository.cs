@@ -72,20 +72,26 @@ namespace Domain.Repositories
 
         public List<ImageDto> Get(FilterDto filter, int? userId = null )
         {
-            var minImageCountForPage = filter.ImagesOnPageCount * (filter.PageNumber - 1) + 1;
+            var minImageCountForPage = filter.ImagesOnPageCount.HasValue
+                ? 0
+                : filter.ImagesOnPageCount.Value * (filter.PageNumber - 1) + 1;
             using (var context = ContextFactory.CreateDbContext(ConnectionString))
             {
                 IEnumerable<ImageDto> images = context.Images
-                    .Include(image=>image.UserToImageScores)
-                    .ThenInclude(image=>image.Score)
+                    .Include(image => image.UserToImageScores)
+                    .ThenInclude(image => image.Score)
                     .Include(image => image.UserToImageTags)
                     .ThenInclude(image => image.Tag)
                     .Where(image => filter.Tags == null || filter.Tags.Count() == 0
                         ? true
                         : image.UserToImageTags.Any(uit => filter.Tags.Contains(uit.Tag.Name)))
-                    .Skip(minImageCountForPage - 1)
-                    .Take(filter.ImagesOnPageCount)
                     .Select(image => new ImageDto(image, userId));
+                if(filter.ImagesOnPageCount.HasValue)
+                {
+                    images = images
+                                .Skip(minImageCountForPage - 1)
+                                .Take(filter.ImagesOnPageCount.Value);
+                }
 
                 if (images.Count() == 0)
                 {
@@ -121,7 +127,7 @@ namespace Domain.Repositories
             SaveUserToImageTags(tags, image.ImmageId, userId);
         }
 
-        public void AddScore(int scoreValue, int imageId, int userId)
+        public CaruselImageDto AddScore(int scoreValue, int imageId, int userId)
         {
             using (var context = ContextFactory.CreateDbContext(ConnectionString))
             {
@@ -130,13 +136,27 @@ namespace Domain.Repositories
                 {
                     throw new ImageRepositoryException("Оценки не существует");
                 }
-                context.UserToImageScores.Add(new UserToImageScore()
+                var oldScore = context.UserToImageScores.FirstOrDefault(x => x.ImageId == imageId && x.UserId == userId);
+                if(oldScore == null)
                 {
-                    ScoreId = score.Id,
-                    ImageId = imageId,
-                    UserId = userId
-                });
+                    context.UserToImageScores.Add(new UserToImageScore()
+                    {
+                        ScoreId = score.Id,
+                        ImageId = imageId,
+                        UserId = userId
+                    });
+                }
+                else
+                {
+                    oldScore.ScoreId = score.Id;
+                }
                 context.SaveChanges();
+                return new CaruselImageDto(context.Images
+                        .Include(image => image.UserToImageScores)
+                        .ThenInclude(image => image.Score)
+                        .Include(image => image.UserToImageTags)
+                        .ThenInclude(image => image.Tag)
+                        .FirstOrDefault(image => image.Id == imageId));
             }
         }
 

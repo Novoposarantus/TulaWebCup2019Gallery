@@ -99,6 +99,27 @@ export const carusel = {
         },
         [caruselActions.setImage]: ({commit}, image) => {
             commit(caruselMutations.setImage, image);
-        }
+        },
+        [caruselActions.setRating]: async ({commit, state}, ratingData) => {
+            commit(caruselMutations.startLoading);
+            try {
+                let {json} =  await request(process.env.VUE_APP_SCORE, 'POST', ratingData);
+                commit(caruselMutations.setImage, {
+                    ...json,
+                    userRating: ratingData.scoreValue,
+                    isFirst: state[caruselState.image].isFirst,
+                    isLast: state[caruselState.image].isLast
+                })
+            }
+            catch (error) {
+                if(!error.response || error.response.status !== 400){
+                    commit(caruselMutations.setError);
+                }
+                else{
+                    commit(caruselMutations.setError, error.response.data);
+                }
+                commit(caruselMutations.finishLoading);
+            }
+        },
     }
 };

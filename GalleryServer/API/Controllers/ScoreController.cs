@@ -24,8 +24,7 @@ namespace API.Controllers
             try
             {
                 int userId = int.Parse(User.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.NameIdentifier).Value);
-                _imageRepository.AddScore(scoreInfo.ScoreValue, scoreInfo.ImageId, userId);
-                return Ok();
+                return Ok(_imageRepository.AddScore(scoreInfo.ScoreValue, scoreInfo.ImageId, userId));
             }
             catch (ImageRepositoryException e)
             {

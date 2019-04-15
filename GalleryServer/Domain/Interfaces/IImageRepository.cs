@@ -12,6 +12,6 @@ namespace Domain.Interfaces
         int GetImageCount();
         void Save(List<ImageDto> image, int userId);
         void AddTags(ImageTagsDto image, int userId);
-        void AddScore(int scoreValue, int imageId, int userId);
+        CaruselImageDto AddScore(int scoreValue, int imageId, int userId);
     }
 }

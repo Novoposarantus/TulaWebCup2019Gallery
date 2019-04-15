@@ -18,6 +18,7 @@
                         background-color="grey darken-1"
                         empty-icon="$vuetify.icons.ratingFull"
                         size="10"
+                        readonly
                     ></v-rating>
                 </div>
             </v-card>

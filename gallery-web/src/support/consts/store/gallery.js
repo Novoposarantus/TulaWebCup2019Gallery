@@ -46,7 +46,7 @@ export const galleryActions = {
     setTags : 'SET_TAGS',
     setSortBy : 'SET_SORT_BY',
     setReverseSort: 'SET_REVERSE_SORT',
-    loadAllImages: 'LOAD_ALL_IMAGES'
+    loadAllImages: 'LOAD_ALL_IMAGES',
 }
 
 export const galleryGlobalActions = {

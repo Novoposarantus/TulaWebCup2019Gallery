@@ -58,7 +58,7 @@ export default {
             filter: galleryGlobalGetters.filter
         }),
         filterReverseName(){
-            if(this.filter.reverseSort){
+            if(!this.filter.reverseSort){
                 return "По убыванию";
             }
             return "По возрастанию"
@@ -97,11 +97,11 @@ export default {
 }
 .choose-image{
     display: inline-block;
-    margin: 0 20px;
+    margin: 5px 20px;
 }
 .filter-select{
     display: inline-block;
     max-width: 150px;
-    margin: 0 20px;
+    margin: 5px 20px;
 }
 </style>

@@ -32,7 +32,8 @@ export const caruselActions = {
     loadImage: 'LOAD_IMAGE',
     setImage: 'SET_IMAGE',
     next: 'NEXT',
-    prev: 'PREV'
+    prev: 'PREV',
+    setRating: 'SET_RATING'
 }
 
 export const caruselGlobalActions = {
@@ -41,4 +42,5 @@ export const caruselGlobalActions = {
     setImage: `${caruselNameSapace}/${caruselActions.setImage}`,
     next: `${caruselNameSapace}/${caruselActions.next}`,
     prev: `${caruselNameSapace}/${caruselActions.prev}`,
+    setRating: `${caruselNameSapace}/${caruselActions.setRating}`,
 }
