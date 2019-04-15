@@ -3,9 +3,7 @@
     <v-app id="inspire">
       <app-header></app-header>
       <v-content>
-        <v-container fluid>
           <router-view></router-view>
-        </v-container>
       </v-content>
       <app-footer></app-footer>
     </v-app>
@@ -15,11 +13,18 @@
 <script>
 import AppHeader from './components/layout/AppHeader';
 import AppFooter from './components/layout/AppFooter';
+import {authGlobalGetters, authGlobalActions} from '@/support';
+
 export default {
   name: 'app',
   components:{
     AppHeader,
     AppFooter
+  },
+  async beforeMount(){
+    if(this.$store.getters[authGlobalGetters.isAuthenticated]){
+      await this.$store.dispatch(authGlobalActions.loadUserData)
+    }
   }
 }
 </script>

@@ -4,11 +4,13 @@ import VueRouter from 'vue-router';
 import LoginView from '@/views/auth/LoginView';
 import RegistrationView from '@/views/auth/RegistrationView';
 import GalleryView from '@/views/GalleryView';
+import ImagesLoader from '@/views/ImagesLoader';
 
 import {
     routeNames,
     authGlobalGetters,
-    galleryGlobalActions
+    galleryGlobalActions,
+    galleryGlobalGetters
 } from './support';
 
 Vue.use(VueRouter);
@@ -16,13 +18,12 @@ Vue.use(VueRouter);
 export function createRouter (store) {
     function ifNotAuthenticated(next){
         if (store.getters[authGlobalGetters.isAuthenticated]) {
-            next({name: routeNames.Gallery});
+            next({name: routeNames.StartGallery});
             return false;
         }
         return true;
     }
-
-    // eslint-disable-next-line  
+ 
     function ifAuthenticated(next){
         if (!store.getters[authGlobalGetters.isAuthenticated]) {
             next({name: routeNames.Login});
@@ -39,7 +40,7 @@ export function createRouter (store) {
                 path: '/',
                 name : routeNames.Start,
                 redirect: () =>({
-                    name: routeNames.Gallery
+                    name: routeNames.StartGallery
                 })
             },
             {
@@ -62,14 +63,37 @@ export function createRouter (store) {
             },
             {
                 path: `/gallery`,
+                name: routeNames.StartGallery,
+                redirect: () =>({
+                    name: routeNames.Gallery,
+                    params: {pageNumber: 1}
+                })
+            },
+            {
+                path: `/gallery/:pageNumber`,
                 name: routeNames.Gallery,
                 component :  GalleryView,
-                beforeEnter: async (_to, _from, next) =>{
+                beforeEnter: async (to, _from, next) =>{
+                    store.dispatch(galleryGlobalActions.setPageNumber, to.params.pageNumber);
                     await store.dispatch(galleryGlobalActions.loadImages);
+                    if(store.getters[galleryGlobalGetters.error]) {
+                        next({name:routeNames.StartGallery});
+                        return;
+                    }
                     next();
                 }
             },
-
+            {
+                path: `/load-images`,
+                name: routeNames.LoadImages,
+                component :  ImagesLoader,
+                beforeEnter: async (_to, _from, next) =>{
+                    if(!ifAuthenticated(next)){
+                        return;
+                    }
+                    next();
+                }
+            },
         ]
     });
 }

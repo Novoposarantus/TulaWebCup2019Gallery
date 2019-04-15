@@ -9,7 +9,8 @@ import {
     authGetters,
     authActions,
     authMutations,
-    globalActions
+    globalActions,
+    defaultClear
 } from '../support';
 
 export const auth = {
@@ -32,25 +33,24 @@ export const auth = {
     mutations:{
         ...defaultMutations,
         [authMutations.authSuccess]: (state) => {
-            state.isAuthenticated = true;
+            state[authState.isAuthenticated] = true;
         },
-        [authMutations.authError]: (state,error = 'Что-то пошло не так. Повторите попытку позже.') => {
-            state.isAuthenticated = false;
-            state.error = error;
+        [authMutations.authError]: (state, error = 'Что-то пошло не так. Повторите попытку позже.') => {
+            state[authState.isAuthenticated] = false;
+            state[authState.error] = error;
         },
         [authMutations.authLogout]: (state)=>{
-            state.isAuthenticated = false;
+            state[authState.isAuthenticated] = false;
         },
         [authMutations.setUserInfo]: (state, userData) =>{
-            state.userData = {
+            state[authState.userData] = {
                 ...userData
             }
         },
         [authMutations.clear](state){
-            state.isAuthenticated = false;
-            state.isLoading = false;
-            state.error = null;
-            state.userData = null;
+            defaultClear(state);
+            state[authState.isAuthenticated] = false;
+            state[authState.userData] = null;
         }
     },
     actions:{
@@ -87,6 +87,23 @@ export const auth = {
             commit(authMutations.startLoading);
             try {
                 await request(process.env.VUE_APP_USERS, 'POST', user);
+                commit(authMutations.finishLoading);
+            }
+            catch (error) {
+                if(!error.response || error.response.status !== 401){
+                    commit(authMutations.authError);
+                }
+                else{
+                    commit(authMutations.authError, error.response.data);
+                }
+                commit(authMutations.finishLoading);
+            }
+        },
+        [authActions.loadUserData]: async ({commit}) => {
+            commit(authMutations.startLoading);
+            try {
+                const {json} = await request(process.env.VUE_APP_USERS, 'GET');
+                commit(authMutations.setUserInfo, json);
                 commit(authMutations.finishLoading);
             }
             catch (error) {

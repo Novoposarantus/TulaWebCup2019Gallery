@@ -1,31 +1,39 @@
 <template>
-    <div>
-        <image-container
-            v-for="image in images"
-            :key="image.id"
-            :image="image"
-        ></image-container>
+    <div class="gallery-container">
+        <div class="gallery-content">
+            <gallery-header></gallery-header>
+            <gallery-content></gallery-content>
+        </div>
+        <div class="gallery-footer">
+            <gallery-footer></gallery-footer>
+        </div>
     </div>
 </template>
 
 <script>
-import {mapGetters} from 'vuex';
-import ImageContainer from '@/components/common/ImageContainer'
-import {
-    galleryGlobalGetters
-} from '@/support';
+import GalleryContent from '@/components/layout/Gallery/GalleryContent';
+import GalleryHeader from '@/components/layout/Gallery/GalleryHeader';
+import GalleryFooter from '@/components/layout/Gallery/GalleryFooter';
 export default {
     components:{
-        ImageContainer
-    },
-    computed:{
-        ...mapGetters({
-            images: galleryGlobalGetters.images
-        })
+        GalleryContent,
+        GalleryHeader,
+        GalleryFooter
     }
 }
 </script>
 
 <style scoped>
-    
+.gallery-container{
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 20px;
+}
+.gallery-content{
+  flex: 1 0 auto;
+}
+.gallery-footer{
+  flex: 0 0 auto;
+}
 </style>

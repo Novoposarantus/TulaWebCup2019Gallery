@@ -2,13 +2,15 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Models.DtoModels;
+using System.Linq;
+using System.Security.Claims;
 
 namespace API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    public class TagController : BaseController
+    public class TagController : ControllerBase
     {
         readonly IImageRepository _imageRepository;
         public TagController(IImageRepository imageRepository)
@@ -18,7 +20,8 @@ namespace API.Controllers
         [HttpPost]
         public IActionResult Post([FromBody]ImageTagsDto tagsInfo)
         {
-            _imageRepository.AddTags(tagsInfo, _userId.Value);
+            int userId = int.Parse(User.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.NameIdentifier).Value);
+            _imageRepository.AddTags(tagsInfo, userId);
             return Ok();
         }
     }

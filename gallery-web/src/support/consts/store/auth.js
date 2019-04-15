@@ -40,6 +40,7 @@ export const authActions = {
     authentication: 'AUTHENTICATION',
     logout: 'LOGOUT',
     register: 'REGISTER',
+    loadUserData: 'LOAD_USER_DATA'
 }
 
 export const authGlobalActions = {
@@ -47,4 +48,5 @@ export const authGlobalActions = {
     authentication: `${authNameSpace}/${authActions.authentication}`,
     logout: `${authNameSpace}/${authActions.logout}`,
     register: `${authNameSpace}/${authActions.register}`,
+    loadUserData: `${authNameSpace}/${authActions.loadUserData}`,
 }

@@ -7,20 +7,21 @@ namespace Models.DtoModels
 {
     public class ImageDto
     {
+        public ImageDto() { }
         public ImageDto(ImageModel image)
         {
             Id = image.Id;
             Name = image.Name;
             DateUpload = image.DateUpload;
-            Image = Convert.ToBase64String(image.Image);
+            ImageContent = $"data:image/png;base64,{Convert.ToBase64String(image.Image)}";
             Rating = GetRating(image.UserToImageScores);
-            Tags = image.UserToImageTags.Select(uiTag => uiTag.Tag.Name);
+            Tags = image?.UserToImageTags.Select(uiTag => uiTag.Tag.Name);
 
         }
         public int Id { get; set; }
         public string Name { get; set; }
         public DateTime DateUpload { get; set; }
-        public string Image { get; set; }
+        public string ImageContent { get; set; }
         public decimal Rating { get; set; }
         public IEnumerable<string> Tags { get; set; }
         private decimal GetRating(IEnumerable<UserToImageScore> userToImageScores)

@@ -5,7 +5,7 @@
         <v-toolbar-items class="hidden-sm-and-down">
             <v-btn
               flat
-              :to="{ name : routeNames.Gallery }"
+              :to="{ name : routeNames.StartGallery }"
             >
                 Галерея
             </v-btn>
@@ -31,6 +31,13 @@
                 Выйти
             </v-btn>
         </v-toolbar-items>
+        <v-toolbar-title
+          class="hidden-sm-and-down"
+          v-if="isAuthenticated"
+        >
+          <v-icon>fas fa-user</v-icon>
+          {{userName}}
+        </v-toolbar-title>
       </v-toolbar>
 </template>
 
@@ -49,7 +56,8 @@ export default {
   },
   computed:{
     ...mapGetters({
-      isAuthenticated : authGlobalGetters.isAuthenticated
+      isAuthenticated : authGlobalGetters.isAuthenticated,
+      userName : authGlobalGetters.userName
     })
   },
   methods:{
@@ -58,7 +66,7 @@ export default {
     }),
     onLogout(){
       this.logout();
-      this.$router.push({name: routeNames.Gallery});
+      this.$router.push({name: routeNames.StartGallery});
     }
   }
 }

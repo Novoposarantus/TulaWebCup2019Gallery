@@ -11,6 +11,7 @@ using Models.Enums;
 using System.IO;
 using System.Drawing;
 using Domain.Context;
+using System.Text.RegularExpressions;
 
 namespace Domain.Repositories
 {
@@ -74,21 +75,23 @@ namespace Domain.Repositories
             }
         }
 
-        public void Save(ImageDto image, int userId)
+        public void Save(List<ImageDto> images, int userId)
         {
             using (var context = ContextFactory.CreateDbContext(ConnectionString))
             {
-                ImageModel imageModel = new ImageModel()
+                foreach(var image in images)
                 {
-                    Name = image.Name,
-                    DateUpload = DateTime.Now,
-                    Image = Convert.FromBase64String(image.Image)
-                };
-                context.Images.Add(imageModel);
+                    var base64Data = Regex.Match(image.ImageContent, @"data:image/(?<type>.+?),(?<data>.+)").Groups["data"].Value;
+                    ImageModel imageModel = new ImageModel()
+                    {
+                        Name = image.Name,
+                        DateUpload = DateTime.Now,
+                        Image = Convert.FromBase64String(base64Data)
+                    };
+                    context.Images.Add(imageModel);
+                }
                 context.SaveChanges();
             }
-            var tags = SaveTags(image.Tags);
-            SaveUserToImageTags(tags, image.Id, userId);
         }
 
         public void AddTags(ImageTagsDto image, int userId)

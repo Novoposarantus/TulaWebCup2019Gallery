@@ -39,14 +39,14 @@ export const defaultGetters = {
 
 export const defaultMutations = {
     [defaultMutationsNames.startLoading]: (state) => {
-        state.error = null;
-        state.isLoading = true;
+        state[defaultStateNames.error] = null;
+        state[defaultStateNames.isLoading] = true;
     },
     [defaultMutationsNames.finishLoading]: (state) => {
-        state.isLoading = false;
+        state[defaultStateNames.isLoading] = false;
     },
     [defaultMutationsNames.setError]: (state, error = 'Что-то пошло не так. Повторите попытку позже.') => {
-        state.error = error;
+        state[defaultStateNames.error] = error;
     },
 }
 
@@ -54,4 +54,9 @@ export const defaultActions = {
     [defaultActionsNames.closeError]: ({commit}) => {
         commit(defaultMutationsNames.setError, null);
     }
+}
+
+export function defaultClear(state){
+    state[defaultStateNames.isLoading] = false;
+    state[defaultStateNames.error] = null
 }

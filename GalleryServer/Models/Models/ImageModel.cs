@@ -11,6 +11,5 @@ namespace Models.Models
         public byte[] Image { get; set; }
         public IEnumerable<UserToImageTag> UserToImageTags { get; set; }
         public IEnumerable<UserToImageScore> UserToImageScores { get; set; }
-
     }
 }

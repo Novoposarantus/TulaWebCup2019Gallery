@@ -9,6 +9,7 @@ import {
     defaultActions,
     defaultMutations,
     sort,
+    defaultClear,
 } from '../support';
 
 export const gallery = {
@@ -32,21 +33,20 @@ export const gallery = {
     mutations:{
         ...defaultMutations,
         [galleryMutations.setImages]: (state, images) => {
-            console.log('images',images);
             state[galleryState.images] = [
                 ...images
             ]
-            console.log('state',state.images);
         },
         [galleryMutations.setFilter]: (state, filter) => {
             state[galleryState.filter] = {
-                ...filter
+                ...filter,
+                pageNumber: Number(filter.pageNumber)
             }
         },
-        [galleryMutations.setPageNumaber]: (state, pageNumber) =>{
+        [galleryMutations.setPageNumber]: (state, pageNumber) =>{
             state[galleryState.filter] = {
                 ...state[galleryState.filter],
-                pageNumber
+                pageNumber: Number(pageNumber)
             }
         },
         [galleryMutations.setImagesOnPageCount]: (state, imagesOnPageCount) =>{
@@ -76,10 +76,7 @@ export const gallery = {
             }
         },
         [galleryMutations.clear]: (state) => {
-            state[galleryState.images] = [];
-            state[galleryState.isLoading] = false;
-            state[galleryState.error] = null;
-            state[galleryState.filter] = null;
+            defaultClear(state);
         }
     },
     actions:{
@@ -100,8 +97,8 @@ export const gallery = {
                 commit(galleryMutations.finishLoading);
             }
         },
-        [galleryActions.setPageNumaber]: ({commit}, pageNumber)=>{
-            commit(galleryMutations.setPageNumaber, pageNumber);
+        [galleryActions.setPageNumber]: ({commit}, pageNumber)=>{
+            commit(galleryMutations.setPageNumber, pageNumber);
         },
         [galleryActions.setImagesOnPageCount]: ({commit}, imagesOnPageCount)=>{
             commit(galleryMutations.setImagesOnPageCount, imagesOnPageCount);
@@ -115,5 +112,20 @@ export const gallery = {
         [galleryActions.setReverseSort]: ({commit}, reverseSort)=>{
             commit(galleryMutations.setReverseSort, reverseSort);
         },
+        [galleryActions.saveImages]: async ({commit}, images)=>{
+            commit(galleryMutations.startLoading);
+            try {
+                await request(process.env.VUE_APP_IMAGE, 'POST', images);
+            }
+            catch (error) {
+                if(!error.response || error.response.status !== 400){
+                    commit(galleryMutations.setError);
+                }
+                else{
+                    commit(galleryMutations.setError, error.response.data);
+                }
+                commit(galleryMutations.finishLoading);
+            }
+        }
     }
 };

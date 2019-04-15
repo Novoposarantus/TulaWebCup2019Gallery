@@ -8,7 +8,7 @@ namespace Domain.Interfaces
         IEnumerable<ImageDto> Images { get; }
         ImageDto Get(int id);
         List<ImageDto> Get(FilterDto filter);
-        void Save(ImageDto image, int userId);
+        void Save(List<ImageDto> image, int userId);
         void AddTags(ImageTagsDto image, int userId);
         void AddScore(int scoreValue, int imageId, int userId);
     }

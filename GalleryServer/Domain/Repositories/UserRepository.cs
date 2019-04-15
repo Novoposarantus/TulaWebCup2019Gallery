@@ -22,6 +22,19 @@ namespace Domain.Repositories
             }
         }
 
+        public UserModel GetUser(int userId)
+        {
+            using (var context = ContextFactory.CreateDbContext(ConnectionString))
+            {
+                var user = context.Users.Include(u => u.Role).FirstOrDefault(u => u.Id == userId);
+                if (user == null)
+                {
+                    throw new UserRepositoryException("Пользователь с таким логином не найден");
+                }
+                return user;
+            }
+        }
+
         public UserModel GetUser(string userName)
         {
             using (var context = ContextFactory.CreateDbContext(ConnectionString))
@@ -34,6 +47,7 @@ namespace Domain.Repositories
                 return user;
             }
         }
+
         public UserModel GetUser(string userName, string password)
         {
             password = AuthenticationHelper.HashPassword(password);

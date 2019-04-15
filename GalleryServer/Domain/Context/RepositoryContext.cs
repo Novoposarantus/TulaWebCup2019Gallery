@@ -58,12 +58,7 @@ namespace Domain.Context
                 new ScoreModel() { Id = 2, Value = 2 },
                 new ScoreModel() { Id = 3, Value = 3 },
                 new ScoreModel() { Id = 4, Value = 4 },
-                new ScoreModel() { Id = 5, Value = 5 },
-                new ScoreModel() { Id = 6, Value = 6 },
-                new ScoreModel() { Id = 7, Value = 7 },
-                new ScoreModel() { Id = 8, Value = 8 },
-                new ScoreModel() { Id = 9, Value = 9 },
-                new ScoreModel() { Id = 10, Value = 10 }
+                new ScoreModel() { Id = 5, Value = 5 }
             );
         }
     }

@@ -3,13 +3,15 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Models.DtoModels;
 using Models.Exceptions;
+using System.Linq;
+using System.Security.Claims;
 
 namespace API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    public class ScoreController : BaseController
+    public class ScoreController : ControllerBase
     {
         readonly IImageRepository _imageRepository;
         public ScoreController(IImageRepository imageRepository)
@@ -21,7 +23,8 @@ namespace API.Controllers
         {
             try
             {
-                _imageRepository.AddScore(scoreInfo.ScoreValue, scoreInfo.ImageId, _userId.Value);
+                int userId = int.Parse(User.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.NameIdentifier).Value);
+                _imageRepository.AddScore(scoreInfo.ScoreValue, scoreInfo.ImageId, userId);
                 return Ok();
             }
             catch (ImageRepositoryException e)

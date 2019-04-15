@@ -79,7 +79,7 @@ export default {
             }
             await this.authentication({...this.form});
             if(!this.error){
-                this.$router.push({name: routeNames.Gallery});
+                this.$router.push({name: routeNames.StartGallery});
             }
         },
     }

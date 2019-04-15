@@ -28,7 +28,7 @@ export const galleryMutations = {
     ...defaultMutationsNames,
     setImages: 'SET_IMAGES',
     setFilter: 'SET_FILTER',
-    setPageNumaber: 'SET_PAGE_NUMBER',
+    setPageNumber: 'SET_PAGE_NUMBER',
     setImagesOnPageCount : 'SET_IMAGES_ON_PAGE_COUNT',
     setTags : 'SET_TAGS',
     setSortBy : 'SET_SORT_BY',
@@ -38,7 +38,8 @@ export const galleryMutations = {
 export const galleryActions = {
     ...defaultActionsNames,
     loadImages: 'LOAD_IMAGES',
-    setPageNumaber: 'SET_PAGE_NUMBER',
+    saveImages: 'SAVE_IMAGES',
+    setPageNumber: 'SET_PAGE_NUMBER',
     setImagesOnPageCount : 'SET_IMAGES_ON_PAGE_COUNT',
     setTags : 'SET_TAGS',
     setSortBy : 'SET_SORT_BY',
@@ -48,9 +49,10 @@ export const galleryActions = {
 export const galleryGlobalActions = {
     ...defaultGlobalActionsNames(galleryNameSapace),
     loadImages: `${galleryNameSapace}/${galleryActions.loadImages}`,
-    setPageNumaber: `${galleryNameSapace}/${galleryActions.setPageNumaber}`,
+    setPageNumber: `${galleryNameSapace}/${galleryActions.setPageNumber}`,
     setImagesOnPageCount : `${galleryNameSapace}/${galleryActions.setImagesOnPageCount}`,
     setTags : `${galleryNameSapace}/${galleryActions.setTags}`,
     setSortBy : `${galleryNameSapace}/${galleryActions.setSortBy}`,
     setReverseSort: `${galleryNameSapace}/${galleryActions.setReverseSort}`,
+    saveImages: `${galleryNameSapace}/${galleryActions.saveImages}`,
 }
